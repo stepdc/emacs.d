@@ -140,6 +140,8 @@
   (require-init 'init-shackle)
   (require-init 'init-dired)
   (require-init 'init-writting)
+  (require-init 'init-lsp)
+  (require-init 'init-golang)
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ
   ;; Adding directories under "site-lisp/" to `load-path' slows
@@ -161,6 +163,8 @@
 (when (require 'time-date nil t)
   (message "Emacs startup time: %d seconds."
            (time-to-seconds (time-since emacs-load-start-time))))
+
+(load-theme 'plan9 t)
 
 ;;; Local Variables:
 ;;; no-byte-compile: t

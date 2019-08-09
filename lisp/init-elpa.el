@@ -107,7 +107,13 @@
     workgroups2
     zoutline
     company-c-headers
-    company-statistics)
+    company-statistics
+    lsp-mode
+    spinner
+    company-tabnine
+    company-lsp
+    plan9-theme
+    )
   "Packages to install from melpa-unstable.")
 
 (defvar melpa-stable-banned-packages nil
@@ -118,7 +124,7 @@
 (setq package-archives
       '(("localelpa" . "~/.emacs.d/localelpa/")
         ;; uncomment below line if you need use GNU ELPA
-        ;; ("gnu" . "https://elpa.gnu.org/packages/")
+        ("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
 
@@ -346,6 +352,12 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'benchmark-init)
 (require-package 'langtool) ; check grammer
 (require-package 'typescript-mode)
+
+;; stepdc requires
+(require-package 'lsp-mode)
+(require-package 'company-lsp)
+(require-package 'company-tabnine)
+(require-package 'plan9-theme)
 
 ;; {{ Fixed expiring GNU ELPA keys
 ;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to

@@ -30,12 +30,31 @@
            company-dabbrev-ignore-case nil
            ;; press M-number to choose candidate
            company-show-numbers t
-           company-idle-delay 0.2
+           company-idle-delay 0
+           company-echo-delay 0
            company-clang-insert-arguments nil
            company-require-match nil
            company-etags-ignore-case t
            ;; @see https://github.com/company-mode/company-mode/issues/146
            company-tooltip-align-annotations t)
+
+     (define-key company-active-map (kbd "C-j") #'company-select-next)
+     (define-key company-active-map (kbd "C-k") #'company-select-previous)
+     (define-key company-active-map (kbd "C-l") #'company-complete-selection)
+     (define-key company-active-map (kbd "C-n") #'company-select-next)
+     (define-key company-active-map (kbd "C-p") #'company-select-previous)
+     (define-key company-active-map (kbd "C-f") #'company-complete-selection)
+     (define-key company-active-map (kbd "TAB") #'company-complete-common-or-cycle)
+     (define-key company-active-map (kbd "<tab>") #'company-complete-common-or-cycle)
+     (define-key company-active-map (kbd "<backtab>") #'company-select-previous)
+     (define-key company-active-map (kbd "S-TAB") #'company-select-previous)
+
+     (defadvice company-echo-show (around disable-tabnine-upgrade-message activate)
+       (let ((company-message-func (ad-get-arg 0)))
+         (when (and company-message-func
+                    (stringp (funcall company-message-func)))
+           (unless (string-match "The free version of TabNine only indexes up to" (funcall company-message-func))
+             ad-do-it))))
 
      ;; @see https://github.com/redguardtoo/emacs.d/commit/2ff305c1ddd7faff6dc9fa0869e39f1e9ed1182d
      (defadvice company-in-string-or-comment (around company-in-string-or-comment-hack activate)
@@ -80,7 +99,7 @@
            ispell-alternate-dictionary)
       (setq company-ispell-dictionary ispell-alternate-dictionary))
      (t
-       (setq company-ispell-dictionary (file-truename "~/.emacs.d/misc/english-words.txt"))))))
+      (setq company-ispell-dictionary (file-truename "~/.emacs.d/misc/english-words.txt"))))))
 
 ;; message-mode use company-bbdb.
 ;; So we should NOT turn on company-ispell

@@ -2,6 +2,14 @@
 ;;
 ;; My frequently used commands are listed here
 
+(setq evil-search-module 'evil-search)
+(setq evil-ex-complete-emacs-commands nil)
+(setq evil-vsplit-window-right t)
+(setq evil-split-window-below t)
+(setq evil-shift-round nil)
+(setq evil-want-C-u-scroll t)
+(setq evil-disable-insert-state-bindings t)
+
 ;; enable evil-mode
 (evil-mode 1)
 
@@ -950,5 +958,40 @@ If the character before and after CH is space or tab, CH is NOT slash"
      ;; Cursor is alway black because of evil.
      ;; Here is the workaround
      (setq evil-default-cursor t)))
+
+;; stepdc custom bindings
+(define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
+
+;; more bindings
+(define-key evil-normal-state-map (kbd "SPC w") 'save-buffer)
+;; (define-key evil-normal-state-map (kbd "SPC t") 'fzf-projectile)
+(define-key evil-normal-state-map (kbd "SPC t") 'counsel-fzf)
+(define-key evil-normal-state-map (kbd "C-k") (lambda () (interactive) (previous-line 3)))
+(define-key evil-normal-state-map (kbd "C-j") (lambda () (interactive) (next-line 3)))
+(define-key evil-normal-state-map (kbd "K") (lambda () (interactive) (backward-paragraph)))
+(define-key evil-normal-state-map (kbd "J") (lambda () (interactive) (forward-paragraph)))
+(define-key evil-normal-state-map (kbd "C-l") (lambda () (interactive) (recenter-top-bottom) (evil-ex-nohighlight)))
+
+(defun evil-normalize-all-buffers ()
+  "Force a drop to normal state."
+  (unless (eq evil-state 'normal)
+    (dolist (buffer (buffer-list))
+      (set-buffer buffer)
+      (unless (or (minibufferp)
+                  (eq evil-state 'emacs))
+        (evil-force-normal-state)))
+    (message "Dropped back to normal state in all buffers")))
+
+(defvar evil-normal-timer
+  (run-with-idle-timer 15 t #'evil-normalize-all-buffers)
+  "Drop back to normal state after idle for 15 seconds.")
+
+
+;; hooks
+;; (add-hook 'focus-in-hook
+;;      #'evil-normal-state)
+;; (add-hook 'go-mode-hook
+;;           (lambda () (define-key evil-normal-state-map (kbd "C-]") 'godef-jump)))
+(add-hook 'prog-mode-hook #'hs-minor-mode)
 
 (provide 'init-evil)
