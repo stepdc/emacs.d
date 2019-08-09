@@ -990,8 +990,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; hooks
 ;; (add-hook 'focus-in-hook
 ;;      #'evil-normal-state)
-;; (add-hook 'go-mode-hook
-;;           (lambda () (define-key evil-normal-state-map (kbd "C-]") 'godef-jump)))
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 
 (provide 'init-evil)

@@ -27,6 +27,10 @@
            (unless (string-match-p cygpath counsel-grep-base-command)
              (setq counsel-grep-base-command (concat cygpath "/" counsel-grep-base-command))))))
 
+     (global-set-key (kbd "C-c k") 'counsel-rg)
+     (global-set-key (kbd "C-c l") 'counsel-imenu)
+     (global-set-key (kbd "C-c g") 'counsel-git)
+
      ;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
      ;; press "M-o" to choose ivy action
      (ivy-set-actions
@@ -39,8 +43,11 @@
 
 ;; not good experience
 ;; (setq ivy-use-virtual-buffers t)
+(setq ivy-initial-inputs-alist nil)
+
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
 (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+(global-set-key (kbd "C-c r") 'ivy-recentf)
 
 (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 
