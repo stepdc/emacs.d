@@ -356,4 +356,7 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
         ("k" kill-buffer "kill")
         ("r" ivy--rename-buffer-action "rename")))))
 
+(with-eval-after-load 'find-file-in-project
+  (setq counsel-fzf-dir-function 'ffip-project-root))
+
 (provide 'init-ivy)

@@ -215,7 +215,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; {{ https://github.com/syl20bnr/evil-escape
 (setq-default evil-escape-delay 0.3)
 (setq evil-escape-excluded-major-modes '(dired-mode))
-(setq-default evil-escape-key-sequence "kj")
+;; (setq-default evil-escape-key-sequence "kj")
 ;; disable evil-escape when input method is on
 (evil-escape-mode 1)
 ;; }}
@@ -965,7 +965,8 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; more bindings
 (define-key evil-normal-state-map (kbd "SPC w") 'save-buffer)
 ;; (define-key evil-normal-state-map (kbd "SPC t") 'fzf-projectile)
-(define-key evil-normal-state-map (kbd "SPC t") 'counsel-fzf)
+;; (define-key evil-normal-state-map (kbd "SPC t") 'counsel-fzf)
+(define-key evil-normal-state-map (kbd "SPC t") 'ffip)
 (define-key evil-normal-state-map (kbd "C-k") (lambda () (interactive) (previous-line 3)))
 (define-key evil-normal-state-map (kbd "C-j") (lambda () (interactive) (next-line 3)))
 (define-key evil-normal-state-map (kbd "K") (lambda () (interactive) (backward-paragraph)))
