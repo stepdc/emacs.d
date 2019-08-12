@@ -2,13 +2,13 @@
 ;;
 ;; My frequently used commands are listed here
 
-(setq evil-search-module 'evil-search)
-(setq evil-ex-complete-emacs-commands nil)
-(setq evil-vsplit-window-right t)
-(setq evil-split-window-below t)
-(setq evil-shift-round nil)
-(setq evil-want-C-u-scroll t)
-(setq evil-disable-insert-state-bindings t)
+(setq evil-search-module 'evil-search
+      evil-ex-complete-emacs-commands nil
+      evil-vsplit-window-right t
+      evil-split-window-below t
+      evil-shift-round nil
+      evil-want-C-u-scroll t
+      evil-disable-insert-state-bindings t)
 
 ;; enable evil-mode
 (evil-mode 1)

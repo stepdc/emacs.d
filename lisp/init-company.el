@@ -13,7 +13,7 @@
 (eval-after-load 'company
   '(progn
      ;; @see https://github.com/company-mode/company-mode/issues/348
-     (company-statistics-mode)
+     ;; (company-statistics-mode)
 
      (add-to-list 'company-backends 'company-cmake)
      (add-to-list 'company-backends 'company-c-headers)

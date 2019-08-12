@@ -727,7 +727,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 ;; {{ auto-save.el
 (local-require 'auto-save)
 (add-to-list 'auto-save-exclude 'file-too-big-p t)
-(setq auto-save-idle 2) ; 2 seconds
+(setq auto-save-idle 8) ; 8 seconds
 (auto-save-enable)
 (setq auto-save-slient t)
 ;; }}
@@ -1428,4 +1428,8 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
      (setq wgrep-auto-save-buffer t)
      (setq wgrep-too-many-file-length 2024)))
 ;; }}
+
+;; disable cursor blink in terminal
+(setq visible-cursor nil)
+
 (provide 'init-misc)
