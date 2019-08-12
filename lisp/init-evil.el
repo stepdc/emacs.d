@@ -973,6 +973,9 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (define-key evil-normal-state-map (kbd "J") (lambda () (interactive) (forward-paragraph)))
 (define-key evil-normal-state-map (kbd "C-l") (lambda () (interactive) (recenter-top-bottom) (evil-ex-nohighlight)))
 
+;; global
+(global-set-key (kbd "C-c r") 'my-counsel-recentf)
+
 (defun evil-normalize-all-buffers ()
   "Force a drop to normal state."
   (unless (eq evil-state 'normal)

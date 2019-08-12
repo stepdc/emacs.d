@@ -727,7 +727,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 ;; {{ auto-save.el
 (local-require 'auto-save)
 (add-to-list 'auto-save-exclude 'file-too-big-p t)
-(setq auto-save-idle 8) ; 8 seconds
+(setq auto-save-idle 15) ; 15 seconds
 (auto-save-enable)
 (setq auto-save-slient t)
 ;; }}
@@ -1431,5 +1431,43 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 
 ;; disable cursor blink in terminal
 (setq visible-cursor nil)
+
+;; evil edit status settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Customized functions                ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun prelude-move-beginning-of-line (arg)
+  "Move point back to indentation of beginning of line.
+
+Move point to the first non-whitespace character on this line.
+If point is already there, move to the beginning of the line.
+Effectively toggle between the first non-whitespace character and
+the beginning of the line.
+
+If ARG is not nil or 1, move forward ARG - 1 lines first. If
+point reaches the beginning or end of the buffer, stop there."
+  (interactive "^p")
+  (setq arg (or arg 1))
+
+  ;; Move lines first
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
+
+(global-set-key (kbd "C-a") 'prelude-move-beginning-of-line)
+
+;; C-a
+;; (define-key evil-emacs-state-map (kbd "C-a") 'prelude-move-beginning-of-line)
+
+
+(global-set-key (kbd "C-c k") 'counsel-rg)
+(global-set-key (kbd "C-c l") 'counsel-imenu)
+(global-set-key (kbd "C-c g") 'counsel-git)
+
 
 (provide 'init-misc)

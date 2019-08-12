@@ -113,6 +113,7 @@
     company-tabnine
     company-lsp
     plan9-theme
+    gotest
     )
   "Packages to install from melpa-unstable.")
 
