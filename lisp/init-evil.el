@@ -967,6 +967,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; (define-key evil-normal-state-map (kbd "SPC t") 'fzf-projectile)
 ;; (define-key evil-normal-state-map (kbd "SPC t") 'counsel-fzf)
 (define-key evil-normal-state-map (kbd "SPC t") 'ffip)
+(define-key evil-normal-state-map (kbd "SPC n") 'ivy-switch-buffer)
 (define-key evil-normal-state-map (kbd "C-k") (lambda () (interactive) (previous-line 3)))
 (define-key evil-normal-state-map (kbd "C-j") (lambda () (interactive) (next-line 3)))
 (define-key evil-normal-state-map (kbd "K") (lambda () (interactive) (backward-paragraph)))
@@ -989,7 +990,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (defvar evil-normal-timer
   (run-with-idle-timer 15 t #'evil-normalize-all-buffers)
   "Drop back to normal state after idle for 15 seconds.")
-
 
 ;; hooks
 ;; (add-hook 'focus-in-hook

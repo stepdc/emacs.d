@@ -1459,15 +1459,12 @@ point reaches the beginning or end of the buffer, stop there."
     (when (= orig-point (point))
       (move-beginning-of-line 1))))
 
-(global-set-key (kbd "C-a") 'prelude-move-beginning-of-line)
-
 ;; C-a
-;; (define-key evil-emacs-state-map (kbd "C-a") 'prelude-move-beginning-of-line)
-
+(define-key evil-insert-state-map (kbd "C-a") 'prelude-move-beginning-of-line)
 
 (global-set-key (kbd "C-c k") 'counsel-rg)
 (global-set-key (kbd "C-c l") 'counsel-imenu)
 (global-set-key (kbd "C-c g") 'counsel-git)
-
+(global-set-key (kbd "M-*") 'pop-tag-mark)
 
 (provide 'init-misc)

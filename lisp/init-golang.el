@@ -9,7 +9,13 @@
     (setq standard-indent 8)
     ;; (add-hook 'go-mode-hook 'flycheck-mode)
     (add-hook 'before-save-hook 'gofmt-before-save)
-    (define-key evil-normal-state-map (kbd "C-]") 'godef-jump))
+    (define-key evil-normal-state-map (kbd "C-]") 'godef-jump)
+
+    (define-key go-mode-map (kbd "C-c t f") 'go-test-current-file)
+    (define-key go-mode-map (kbd "C-c t t") 'go-test-current-test)
+    (define-key go-mode-map (kbd "C-c t p") 'go-test-current-project)
+    (define-key go-mode-map (kbd "C-c t b") 'go-test-current-benchmark)
+    (define-key go-mode-map (kbd "C-c t x") 'go-run))
 
 (add-hook 'go-mode-hook 'my-golang-setup)
 

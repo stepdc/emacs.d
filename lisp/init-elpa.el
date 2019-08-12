@@ -107,7 +107,7 @@
     workgroups2
     zoutline
     company-c-headers
-    company-statistics
+    ;; company-statistics
     lsp-mode
     spinner
     company-tabnine
@@ -303,7 +303,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'yasnippet-snippets)
 (require-package 'company)
 (require-package 'company-c-headers)
-(require-package 'company-statistics)
+;; (require-package 'company-statistics)
 (require-package 'elpy)
 (require-package 'legalese)
 (require-package 'simple-httpd)
@@ -359,6 +359,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'company-lsp)
 (require-package 'company-tabnine)
 (require-package 'plan9-theme)
+(require-package 'gotest)
 
 ;; {{ Fixed expiring GNU ELPA keys
 ;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to
