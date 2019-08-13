@@ -114,6 +114,8 @@
     company-lsp
     plan9-theme
     gotest
+    flycheck
+    flycheck-golangci-lint
     )
   "Packages to install from melpa-unstable.")
 
@@ -360,6 +362,8 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'company-tabnine)
 (require-package 'plan9-theme)
 (require-package 'gotest)
+(require-package 'flycheck)
+(require-package 'flycheck-golangci-lint)
 
 ;; {{ Fixed expiring GNU ELPA keys
 ;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to

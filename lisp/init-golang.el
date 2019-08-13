@@ -7,7 +7,7 @@
     (setq gofmt-command "goimports")
     (setq tab-width 8)
     (setq standard-indent 8)
-    ;; (add-hook 'go-mode-hook 'flycheck-mode)
+    (add-hook 'go-mode-hook 'flycheck-mode)
     (add-hook 'before-save-hook 'gofmt-before-save)
     (define-key evil-normal-state-map (kbd "C-]") 'godef-jump)
 

@@ -142,6 +142,7 @@
   (require-init 'init-writting)
   (require-init 'init-lsp)
   (require-init 'init-golang)
+  (require-init 'init-flycheck)
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ
   ;; Adding directories under "site-lisp/" to `load-path' slows

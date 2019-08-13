@@ -4,7 +4,7 @@
   '(progn
      (setq lsp-inhibit-message t)
      (setq lsp-message-project-root-warning t)
-     ;; (setq lsp-prefer-flymake nil)
+     (setq lsp-prefer-flymake nil)
      (setq lsp-clients-go-command "~/go/bin/gopls")
      ))
 
