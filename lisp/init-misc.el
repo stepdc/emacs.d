@@ -618,6 +618,7 @@ If step is -1, go backward."
 
 ;; {{ rust
 (add-auto-mode 'rust-mode "\\.rs\\'")
+(setq rust-format-on-save t)
 ;; }}
 
 (defun diff-region-tag-selected-as-a ()

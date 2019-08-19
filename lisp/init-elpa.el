@@ -116,6 +116,7 @@
     gotest
     flycheck
     flycheck-golangci-lint
+    flycheck-rust
     )
   "Packages to install from melpa-unstable.")
 
@@ -364,6 +365,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'gotest)
 (require-package 'flycheck)
 (require-package 'flycheck-golangci-lint)
+(require-package 'flycheck-rust)
 
 ;; {{ Fixed expiring GNU ELPA keys
 ;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to

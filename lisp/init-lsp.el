@@ -1,7 +1,6 @@
-(setq lsp-auto-guess-root t)
-
 (eval-after-load 'lsp
   '(progn
+     (setq lsp-auto-guess-root t)
      (setq lsp-inhibit-message t)
      (setq lsp-message-project-root-warning t)
      (setq lsp-prefer-flymake nil)
@@ -45,5 +44,6 @@
      ))
 
 (add-hook 'prog-mode-hook #'lsp)
+(add-hook 'rust-mode-hook #'lsp)
 
 (provide 'init-lsp)
