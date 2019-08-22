@@ -9,7 +9,8 @@
     (setq standard-indent 8)
     (add-hook 'go-mode-hook 'flycheck-mode)
     (add-hook 'before-save-hook 'gofmt-before-save)
-    (define-key evil-normal-state-map (kbd "C-]") 'godef-jump)
+    ;; (define-key evil-normal-state-map (kbd "C-]") 'godef-jump)
+    (define-key evil-normal-state-map (kbd "C-]") 'xref-find-definitions)
 
     (define-key go-mode-map (kbd "C-c t f") 'go-test-current-file)
     (define-key go-mode-map (kbd "C-c t t") 'go-test-current-test)

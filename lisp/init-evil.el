@@ -213,11 +213,11 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; }}
 
 ;; {{ https://github.com/syl20bnr/evil-escape
-(setq-default evil-escape-delay 0.3)
-(setq evil-escape-excluded-major-modes '(dired-mode))
+;; (setq-default evil-escape-delay 0.3)
+;; (setq evil-escape-excluded-major-modes '(dired-mode))
 ;; (setq-default evil-escape-key-sequence "kj")
 ;; disable evil-escape when input method is on
-(evil-escape-mode 1)
+;; (evil-escape-mode 1)
 ;; }}
 
 
@@ -871,7 +871,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; }}
 
 ;; {{ `evil-matchit'
-(global-evil-matchit-mode 1)
+;; (global-evil-matchit-mode 1)
 ;; }}
 
 ;; {{ evil-exchange
