@@ -5,15 +5,11 @@
      (setq lsp-message-project-root-warning t)
      (setq lsp-prefer-flymake nil)
      (setq lsp-clients-go-command "~/go/bin/gopls")
-     ))
 
-(eval-after-load 'lsp
-  (eval-after-load 'company
-    '(progn
-       (setq company-lsp-cache-candidates 'auto)
-       (push 'company-lsp company-backends)
-       (setq company-lsp-async t)
-       )))
+     (setq company-lsp-cache-candidates 'auto)
+     (push 'company-lsp company-backends)
+     (setq company-lsp-async t)
+     ))
 
 (eval-after-load 'company-lsp
   '(progn
