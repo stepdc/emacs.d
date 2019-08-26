@@ -9,6 +9,8 @@
      (setq company-lsp-cache-candidates 'auto)
      (push 'company-lsp company-backends)
      (setq company-lsp-async t)
+     (define-key evil-normal-state-map (kbd "C-]") 'xref-find-definitions)
+     (define-key prog-mode-map (kbd "S-<f6>") 'lsp-rename)
      ))
 
 (eval-after-load 'company-lsp
@@ -41,5 +43,6 @@
 
 (add-hook 'prog-mode-hook #'lsp)
 (add-hook 'rust-mode-hook #'lsp)
+(add-hook 'python-mode-hook #'lsp)
 
 (provide 'init-lsp)

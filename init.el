@@ -165,8 +165,7 @@
   (message "Emacs startup time: %d seconds."
            (time-to-seconds (time-since emacs-load-start-time))))
 
-(load-theme 'doom-one-light t)
-;; (load-theme 'plan9 t)
+(load-theme 'plan9 t)
 
 ;;; Local Variables:
 ;;; no-byte-compile: t
