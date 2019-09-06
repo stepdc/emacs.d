@@ -728,6 +728,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 ;; {{ auto-save.el
 (local-require 'auto-save)
 (add-to-list 'auto-save-exclude 'file-too-big-p t)
+(setq auto-save-list-file-prefix nil)
 (setq auto-save-idle 15) ; 15 seconds
 (auto-save-enable)
 (setq auto-save-slient t)
