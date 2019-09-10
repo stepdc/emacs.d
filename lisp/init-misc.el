@@ -1469,4 +1469,12 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "C-c g") 'counsel-git)
 (global-set-key (kbd "M-*") 'pop-tag-mark)
 
+;;
+(defadvice kill-region (before unix-werase activate compile)
+      "When called interactively with no active region, delete a single word
+    backwards instead."
+      (interactive
+       (if mark-active (list (region-beginning) (region-end))
+         (list (save-excursion (backward-word 1) (point)) (point)))))
+
 (provide 'init-misc)
