@@ -41,8 +41,8 @@
      (add-to-list 'company-backends '(company-lsp :with company-tabnine :separate))
      ))
 
-(add-hook 'prog-mode-hook #'lsp)
-(add-hook 'rust-mode-hook #'lsp)
-(add-hook 'python-mode-hook #'lsp)
+(add-hook 'prog-mode-hook #'lsp-deferred)
+(add-hook 'rust-mode-hook #'lsp-deferred)
+(add-hook 'python-mode-hook #'lsp-deferred)
 
 (provide 'init-lsp)
