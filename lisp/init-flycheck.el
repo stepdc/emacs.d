@@ -1,8 +1,8 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 (defun my-go-flycheck-hook ()
-  (setq flycheck-golangci-lint-fast t)
-  (flycheck-golangci-lint-setup))
+  (flycheck-golangci-lint-setup)
+  (setq flycheck-golangci-lint-fast t))
 
 (with-eval-after-load 'go-mode
   (add-hook 'flycheck-mode-hook #'my-go-flycheck-hook))
