@@ -135,6 +135,7 @@
   ;; misc has some crucial tools I need immediately
   (require-init 'init-misc)
 
+  ;; stepdc configs
   (require-init 'init-emacs-w3m)
   (require-init 'init-hydra)
   (require-init 'init-shackle)
