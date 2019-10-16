@@ -65,5 +65,5 @@ network-security.data
 *.mp4
 *.ogg
 nov-places
-*.lsp-session-v1
 transient/
+*.lsp-session-v1
