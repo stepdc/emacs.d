@@ -88,4 +88,21 @@
       (eldoc-mode 1))))
 (add-hook 'c-mode-common-hook 'c-mode-common-hook-setup)
 
+(eval-after-load 'cc-mode
+  '(progn
+     (require 'ccls)
+     (setq ccls-executable "/usr/bin/ccls")
+
+     (when (locate-dominating-file "/usr/share/clang" "clang-format.el")
+       (load "/usr/share/clang/clang-format.el"))
+     (add-hook 'before-save-hook
+               (lambda ()
+                 (when (member major-mode '(c-mode c++-mode glsl-mode))
+                   (progn
+                     (when (locate-dominating-file "." ".clang-format")
+                       (clang-format-buffer))
+                     ;; Return nil, to continue saving.
+                     nil))))
+     ))
+
 (provide 'init-cc-mode)

@@ -120,6 +120,7 @@
     flycheck
     flycheck-golangci-lint
     flycheck-rust
+    emacs-ccls
     )
   "Packages to install from melpa-unstable.")
 
