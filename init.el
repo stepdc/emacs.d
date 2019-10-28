@@ -91,7 +91,7 @@
   (require-init 'init-elpa)
   (require-init 'init-exec-path) ;; Set up $PATH
   ;; Any file use flyspell should be initialized after init-spelling.el
-  (require-init 'init-spelling)
+  ;; (require-init 'init-spelling)
   (require-init 'init-gui-frames)
   (require-init 'init-uniquify)
   (require-init 'init-ibuffer)
@@ -134,13 +134,13 @@
 
   ;; misc has some crucial tools I need immediately
   (require-init 'init-misc)
-
-  ;; stepdc configs
   (require-init 'init-emacs-w3m)
   (require-init 'init-hydra)
   (require-init 'init-shackle)
   (require-init 'init-dired)
   (require-init 'init-writting)
+
+  ;; stepdc configs
   (require-init 'init-lsp)
   (require-init 'init-golang)
   (require-init 'init-flycheck)
