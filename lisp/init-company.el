@@ -49,6 +49,7 @@
      (define-key company-active-map (kbd "C-n") #'company-select-next)
      (define-key company-active-map (kbd "C-p") #'company-select-previous)
      (define-key company-active-map (kbd "C-f") #'company-complete-selection)
+     (define-key company-active-map (kbd "C-w") #'kill-region)
      (define-key company-active-map (kbd "TAB") #'company-complete-common-or-cycle)
      (define-key company-active-map (kbd "<tab>") #'company-complete-common-or-cycle)
      (define-key company-active-map (kbd "<backtab>") #'company-select-previous)
