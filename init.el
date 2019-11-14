@@ -143,10 +143,15 @@
   (require-init 'init-dired t)
   (require-init 'init-writting t)
 
+  ;; ediff configuration should be last so it can override
+  ;; the key bindings in previous configuration
+  (require-init 'init-ediff)
+  
   ;; stepdc configs
   (require-init 'init-lsp)
   (require-init 'init-golang)
   (require-init 'init-flycheck)
+
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ
   ;; Adding directories under "site-lisp/" to `load-path' slows
