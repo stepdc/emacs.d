@@ -28,6 +28,10 @@
            (unless (string-match-p cygpath counsel-grep-base-command)
              (setq counsel-grep-base-command (concat cygpath "/" counsel-grep-base-command))))))
 
+     ;; ffip root
+     (setq counsel-fzf-dir-function 'ffip-project-root)
+     (setq ivy-initial-inputs-alist nil)
+
      ;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
      ;; press "M-o" to choose ivy action
      (ivy-set-actions
@@ -40,7 +44,6 @@
 
 ;; not good experience
 ;; (setq ivy-use-virtual-buffers t)
-(setq ivy-initial-inputs-alist nil)
 
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
 (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
@@ -370,7 +373,7 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
         ("k" kill-buffer "kill")
         ("r" ivy--rename-buffer-action "rename")))))
 
-(with-eval-after-load 'find-file-in-project
-  (setq counsel-fzf-dir-function 'ffip-project-root))
+;; (with-eval-after-load 'find-file-in-project
+;;   (setq counsel-fzf-dir-function 'ffip-project-root))
 
 (provide 'init-ivy)
