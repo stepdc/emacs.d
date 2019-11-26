@@ -115,23 +115,6 @@ Yank the file name at the same time.  FILTER is function to filter the collectio
 
 ;; grep by author is bad idea because it's too slow
 
-(defun counsel-git-show-file ()
-  "Find file in HEAD commit or whose commit hash is selected region."
-  (interactive)
-  (counsel-git-grep-or-find-api 'find-file
-                                (format "git --no-pager diff-tree --no-commit-id --name-only -r %s"
-                                        (counsel-read-keyword nil "HEAD"))
-                                "files from `git-show' "
-                                t))
-
-(defun counsel-git-diff-file ()
-  "Find file in `git diff'."
-  (interactive)
-  (counsel-git-grep-or-find-api 'find-file
-                                "git --no-pager diff --name-only"
-                                "files from `git-diff' "
-                                t))
-
 (defun counsel-insert-grepped-line (val)
   (let ((lst (split-string val ":")) text-line)
     ;; the actual text line could contain ":"
@@ -341,13 +324,7 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
   "Combine the power of counsel-etags and imenu."
   (interactive)
   (cond
-   ((and (locate-dominating-file default-directory "TAGS")
-         (not (memq major-mode '(js2-mode
-                                 rjsx-mode
-                                 markdown-mode
-                                 org-mode
-                                 emacs-lisp-mode
-                                 diff-mode))))
+   ((my-use-tags-as-imenu-function-p)
     (let* ((imenu-create-index-function 'counsel-etags-imenu-default-create-index-function))
       (counsel-imenu)))
    (t
