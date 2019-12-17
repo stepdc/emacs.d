@@ -10,7 +10,10 @@
 
 (defun my-use-tags-as-imenu-function-p ()
   "Can use tags file to build imenu function"
+  (unless (featurep 'counsel-etags) (require 'counsel-etags))
   (and (locate-dominating-file default-directory "TAGS")
+       ;; ctags needs extra setup to extract typescript tags
+       (file-exists-p counsel-etags-ctags-options-file)
        (memq major-mode '(typescript-mode
                           js-mode))))
 
