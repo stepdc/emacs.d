@@ -1364,6 +1364,10 @@ Including indent-buffer, which should not be called automatically on save."
        (if mark-active (list (region-beginning) (region-end))
          (list (save-excursion (backward-word 1) (point)) (point)))))
 
+;; toggle-eshell
+(local-require 'eshell-toggle)
+(global-set-key (kbd "M-t") 'eshell-toggle)
+
 ;; }}
 
 (provide 'init-misc)

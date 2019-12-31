@@ -47,6 +47,8 @@
 
 (eval-after-load 'pyim
   '(progn
+     ;; xiaohe shuangpin
+     (setq pyim-default-scheme 'xiaohe-shuangpin)
      ;; use memory efficient pyim engine
      (setq pyim-dcache-backend 'pyim-dregcache)
      ;; don's use shortcode2word
