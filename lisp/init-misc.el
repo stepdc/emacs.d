@@ -789,9 +789,11 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 
 ;; {{ eacl - emacs auto complete line(s)
 (global-set-key (kbd "C-x C-l") 'eacl-complete-line)
-(global-set-key (kbd "C-c ;") 'eacl-complete-statement)
-(global-set-key (kbd "C-c C-]") 'eacl-complete-snippet)
-(global-set-key (kbd "C-c .") 'eacl-complete-tag)
+(global-set-key (kbd "C-c ;") 'eacl-complete-multiline)
+(eval-after-load 'eacl
+  '(progn
+     ;; not interested in untracked files in git repository
+     (setq eacl-git-grep-untracked nil)))
 ;; }}
 
 ;; {{
@@ -1363,6 +1365,10 @@ Including indent-buffer, which should not be called automatically on save."
       (interactive
        (if mark-active (list (region-beginning) (region-end))
          (list (save-excursion (backward-word 1) (point)) (point)))))
+
+;; toggle-eshell
+(local-require 'eshell-toggle)
+(global-set-key (kbd "M-t") 'eshell-toggle)
 
 ;; }}
 
