@@ -41,9 +41,9 @@
     js-doc
     jss ; remote debugger of browser
     ;; {{ since stable v0.13.0 released, we go back to stable version
-    ;; ivy
-    ;; counsel
-    ;; swiper
+    ivy
+    counsel
+    swiper
     ;; }}
     wgrep
     ;; {{ themes in melpa unstable
@@ -471,7 +471,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
      jbeans-theme
      kaolin-themes
      labburn-theme
-     lenlen-theme
+     ;; lenlen-theme
      leuven-theme
      light-soap-theme
      load-theme-buffer-local
