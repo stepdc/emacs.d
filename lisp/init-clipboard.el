@@ -28,8 +28,7 @@ If N is not nil, copy file name and line number."
 (defun cp-ffip-ivy-last ()
   "Copy visible keys of `ivy-last' into `kill-ring' and clipboard."
   (interactive)
-  (unless (featurep 'find-file-in-project)
-    (require 'find-file-in-project))
+  (my-ensure 'find-file-in-project)
   (when ffip-ivy-last-saved
     (copy-yank-str
      (mapconcat (lambda (e)
@@ -114,6 +113,13 @@ If N is 4, rectangle paste. "
         (js-mode 1))
       ;; turn off syntax highlight
       (font-lock-mode -1))
+
+    ;; past a big string, stop lsp temporarily
+    (when (and (> (length str) 1024)
+               (boundp 'lsp-mode)
+               lsp-mode)
+      (lsp-disconnect)
+      (run-at-time 300 nil  #'lsp-deferred))
 
     ;; paste after the cursor in evil normal state
     (cond

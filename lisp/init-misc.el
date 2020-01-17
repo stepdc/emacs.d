@@ -88,6 +88,11 @@
 ;; {{ find-file-in-project (ffip)
 (eval-after-load 'find-file-in-project
   '(progn
+     (defun my-search-git-reflog-code ()
+       (let* ((default-directory (locate-dominating-file default-directory ".git")))
+         (ffip-shell-command-to-string (format "git --no-pager reflog --date=short -S\"%s\" -p"
+                                               (read-string "Regex: ")))))
+     (push 'my-search-git-reflog-code ffip-diff-backends)
      (setq ffip-match-path-instead-of-filename t)))
 
 (defun neotree-project-dir ()
@@ -206,11 +211,13 @@ This function can be re-used by other major modes after compilation."
     (when (should-use-minimum-resource)
       (font-lock-mode -1)))
 
+  (company-ispell-setup)
+
   (unless (is-buffer-file-temp)
 
     ;; {{ spell check camel-case word
-    ;; (unless (featurep 'wucuo) (local-require 'wucuo))
-    ;; (wucuo-start t)
+    (my-ensure 'wucuo)
+    (wucuo-start t)
     ;; }}
 
     ;; @see http://xugx2007.blogspot.com.au/2007/06/benjamin-rutts-emacs-c-development-tips.html
@@ -351,7 +358,7 @@ This function can be re-used by other major modes after compilation."
 (defun my-which-function ()
   "Return current function name."
 
-  (unless (featurep 'imenu) (require 'imenu))
+  (my-ensure 'imenu)
   ;; @see http://stackoverflow.com/questions/13426564/how-to-force-a-rescan-in-imenu-by-a-function
   (let* ((imenu-create-index-function (if (my-use-tags-as-imenu-function-p)
                                           'counsel-etags-imenu-default-create-index-function
@@ -781,7 +788,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 
 (defun vc-msg-show-code-setup ()
   "Use `ffip-diff-mode' instead of `diff-mode'."
-  (unless (featurep 'find-file-in-project) (require 'find-file-in-project))
+  (my-ensure 'find-file-in-project)
   (ffip-diff-mode))
 
 (add-hook 'vc-msg-show-code-hook 'vc-msg-show-code-setup)
@@ -888,7 +895,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 
 (defun pickup-random-color-theme (themes)
   "Pickup random color theme from themes."
-  (unless (featurep 'counsel) (require 'counsel))
+  (my-ensure 'counsel)
   (let* ((available-themes (mapcar 'symbol-name themes))
          (theme (nth (random (length available-themes)) available-themes)))
     (counsel-load-theme-action theme)
@@ -920,7 +927,8 @@ When join-dark-side is t, pick up dark theme only."
          (hour (string-to-number (format-time-string "%H" (current-time))))
          (prefer-light-p (and (not join-dark-side) (>= hour 9) (<= hour 19)) ))
     (dolist (theme (custom-available-themes))
-      (let* ((light-theme-p (string-match-p "-light" (symbol-name theme))))
+      (let* ((light-theme-p (or (string-match-p "-light" (symbol-name theme))
+                                (member theme '(leuven)))))
         (when (if prefer-light-p light-theme-p (not light-theme-p))
           (push theme themes))))
   (pickup-random-color-theme themes)))
@@ -1238,12 +1246,10 @@ Including indent-buffer, which should not be called automatically on save."
 ;; {{ pomodoro
 (eval-after-load 'pomodoro
   '(progn
+     (setq pomodoro-play-sounds nil) ; *.wav is not installed
      (setq pomodoro-break-time 2)
      (setq pomodoro-long-break-time 5)
-     (setq pomodoro-work-time 15)
-     (setq-default mode-line-format
-              (cons '(pomodoro-mode-line-string pomodoro-mode-line-string)
-                    mode-line-format))))
+     (setq pomodoro-work-time 15)))
 
 (unless (featurep 'pomodoro)
   (require 'pomodoro)
@@ -1253,7 +1259,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;; {{ pronunciation
 (defun my-pronounce-word (&optional word)
   (interactive "sWord: ")
-  (unless (featurep 'url) (require 'url))
+  (my-ensure 'url)
   (if word (setq word (downcase word)))
   (let* ((url (format "https://dictionary.cambridge.org/pronunciation/english/%s" word))
          (cached-mp3 (file-truename (format "~/.emacs.d/misc/%s.mp3" word)))
