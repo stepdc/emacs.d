@@ -115,7 +115,7 @@
     lsp-python-ms
     python
     spinner
-    company-tabnine
+    ;; company-tabnine
     company-lsp
     plan9-theme
     gotest
@@ -368,7 +368,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'lsp-mode)
 (require-package 'lsp-python-ms)
 (require-package 'company-lsp)
-(require-package 'company-tabnine)
+;; (require-package 'company-tabnine)
 (require-package 'plan9-theme)
 (require-package 'gotest)
 (require-package 'flycheck)
