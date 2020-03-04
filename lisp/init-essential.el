@@ -38,35 +38,42 @@
       (counsel-etags-grep)))))
 
 ;; {{ message buffer things
-(defun erase-specific-buffer (num buf-name)
+(defun erase-specific-buffer (buf-name &optional n)
   "Erase the content of the buffer with BUF-NAME.
-Keep the last NUM lines if argument num if given."
-  (let* ((message-buffer (get-buffer buf-name))
+Keep the last N lines if argument num if given."
+  (let* ((buf (get-buffer buf-name))
          (old-buffer (current-buffer)))
     (save-excursion
-      (if (buffer-live-p message-buffer)
-          (progn
-            (switch-to-buffer message-buffer)
-            (if (not (null num))
-                (progn
-                  (end-of-buffer)
-                  (dotimes (i num)
-                    (previous-line))
-                  (set-register t (buffer-substring (point) (point-max)))
-                  (erase-buffer)
-                  (insert (get-register t))
-                  (switch-to-buffer old-buffer))
-              (progn
-                (erase-buffer)
-                (switch-to-buffer old-buffer))))
-        (error "Message buffer doesn't exists!")))))
+      (cond
+       ((buffer-live-p buf)
+        (switch-to-buffer buf)
+        (cond
+         ((null n)
+          (erase-buffer)
+          (switch-to-buffer old-buffer))
+         (t
+          (end-of-buffer)
+          (dotimes (i n)
+            (previous-line))
+          (set-register t (buffer-substring (point) (point-max)))
+          (erase-buffer)
+          (insert (get-register t))
+          (switch-to-buffer old-buffer))))
+       (t
+        (error "Message buffer doesn't exists!"))))))
 
 
-(defun erase-message-buffer (&optional num)
+(defun erase-message-buffer (&optional n)
   "Erase the content of the *Messages* buffer.
-Keep the last NUM lines if argument num if given."
+N specifies the buffer to erase."
   (interactive "p")
-  (erase-specific-buffer num "*Messages*"))
+  (cond
+   ((null n)
+    (erase-specific-buffer "*Messages*"))
+   ((eq 1 n)
+    (erase-specific-buffer "*shell*"))
+   ((eq 2 n)
+    (erase-specific-buffer "*Javascript REPL*"))))
 
 ;; turn off read-only-mode in *Message* buffer, a "feature" in v24.4
 (when (fboundp 'messages-buffer-mode)
@@ -147,5 +154,26 @@ If USE-INDIRECT-BUFFER is not nil, use `indirect-buffer' to hold the widen conte
                                             use-indirect-buffer))
    (t (error "Please select a region to narrow to"))))
 ;; }}
+
+(defun my-counsel-grep-or-swiper (&optional other-source)
+  "Search current file.
+If OTHER-SOURCE is 1, get keyword from clipboard.
+If OTHER-SOURCE is 2, get keyword from `kill-ring'."
+  (interactive "P")
+  (message "other-source=%s" other-source)
+  (let* ((keyword (cond
+                   ((eq 1 other-source)
+                    (cliphist-select-item))
+                   ((eq 2 other-source)
+                    (my-select-from-kill-ring 'identity))
+                   ((region-active-p)
+                    (my-selected-str)))))
+    ;; better performance, got Cygwin grep installed on Windows always
+    (counsel-grep-or-swiper keyword)))
+
+(eval-after-load 'cliphist
+  '(progn
+     (defadvice cliphist-routine-before-insert (before before-cliphist-paste activate)
+       (my-delete-selected-region))))
 
 (provide 'init-essential)

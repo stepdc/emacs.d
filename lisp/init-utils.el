@@ -104,11 +104,11 @@
         (setq key (concat (substring key 0 (- w 4)) "...")))
     (cons key s)))
 
-(defmacro my-select-from-kill-ring (fn)
+(defun my-select-from-kill-ring (fn)
   "If N > 1, yank the Nth item in `kill-ring'.
 If N is nil, use `ivy-mode' to browse `kill-ring'."
   (interactive "P")
-  `(let* ((candidates (cl-remove-if
+  (let* ((candidates (cl-remove-if
                        (lambda (s)
                          (or (< (length s) 5)
                              (string-match-p "\\`[\n[:blank:]]+\\'" s)))
@@ -116,7 +116,12 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
           (ivy-height (/ (frame-height) 2)))
      (ivy-read "Browse `kill-ring':"
                (mapcar #'my-prepare-candidate-fit-into-screen candidates)
-               :action #',fn)))
+               :action fn)))
+
+(defun my-delete-selected-region ()
+  "Delete selected region."
+  (when (region-active-p)
+    (delete-region (region-beginning) (region-end))))
 
 (defun my-insert-str (str)
   "Insert STR into current buffer."
@@ -129,6 +134,9 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
            (not (eolp))
            (not (eobp)))
       (forward-char))
+
+  (my-delete-selected-region)
+
   ;; insert now
   (insert str)
   str)

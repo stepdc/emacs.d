@@ -33,6 +33,7 @@
   - [[#code-navigation-and-auto-completion][Code navigation and auto-completion]]
   - [[#use-m-key-for-evil-matchit][Use "m" key for "evil-matchit"]]
   - [[#color-theme][Color theme]]
+  - [[#true-colors-in-terminal-emacs][True colors in terminal Emacs]]
   - [[#grepreplace-text-in-project][Grep/Replace text in project]]
   - [[#hydraswipercounselivy][Hydra/Swiper/Counsel/Ivy]]
   - [[#react-and-jsx][React and JSX]]
@@ -64,7 +65,6 @@
   - [[#install-multiple-versions-of-emacs][Install multiple versions of Emacs]]
   - [[#change-time-locale][Change Time Locale]]
   - [[#directory-structure][Directory structure]]
-  - [[#true-colors-in-terminal-emacs][True colors in terminal Emacs]]
   - [[#run-the-unit-test-before-git-commit][Run the unit test before git commit]]
   - [[#python-environment][Python environment]]
   - [[#set-up-lsp-mode][Set up lsp-mode]]
@@ -259,8 +259,8 @@ Please watch [[https://www.youtube.com/watch?v=oJTwQvgfgMM][Carsten Dominik's ta
 You can visit [[http://www.emacswiki.org/emacs/][EmacsWiki]] for the solution. Newbies can ask for help at [[http://www.reddit.com/r/emacs/]].
 ** Evil-mode tutorial
 Required for vim user,
-- Finish [[http://superuser.com/questions/246487/how-to-use-vimtutor][vimtutor]].
-- Read [[https://github.com/emacs-evil/evil/blob/master/doc/evil.pdf]]
+- Must read [[http://superuser.com/questions/246487/how-to-use-vimtutor][vimtutor]].
+- Optionally read [[https://evil.readthedocs.io/en/latest/index.html]]
 ** Methodology
 See [[https://github.com/redguardtoo/mastering-emacs-in-one-year-guide][Master Emacs in One Year]].
 * Usage
@@ -281,7 +281,7 @@ Code auto-completion works out of box by using tags file created by Ctags. You n
 
 Please [[https://en.wikipedia.org/wiki/Grep][grep]] in the directory =~/.emacs.d/lisp= if you have any further questions on setup.
 ** Key bindings
-Don't memorize any key binding. Try =M-x my-command= and key binding hint is displayed.
+Don't memorize any key binding. Try =M-x any-command-in-emacs and key binding hint is displayed.
 
 Most key bindings are defined in =~/.emacs.d/lisp/init-evil.el=, a few key in =~/.emacs.d/lisp/init-hydra.el= which uses [[https://github.com/abo-abo/hydra][Hydra]].
 
@@ -394,15 +394,10 @@ Use 256 colors is just one CLI without any extra setup,
 #+BEGIN_SRC sh
 TERM=xterm-256color emacs -nw
 #+END_SRC
-
-True color requires a little setup.
-
-You need install the terminal supporting true color. See [[https://gist.github.com/XVilka/8346728][this list]]. I recommend [[https://mintty.github.io/][Mintty]] on Cygwin, [[https://gnometerminator.blogspot.com/p/introduction.html][Terminator]] on Linux, [[https://www.iterm2.com/][iTerm2]] on macOS.
-
-Only Emacs 26 supports true color.
-
-Follow [[https://www.gnu.org/software/emacs/manual/html_node/efaq/Colors-on-a-TTY.html][Emacs manual]] to set up and start Emacs.
-
+** True colors in terminal Emacs
+- Install Emacs 26
+- Install [[https://gist.github.com/XVilka/8346728][terminals supporting true color]]. I suggest [[https://mintty.github.io/][mintty]] on Windows, [[https://gnometerminator.blogspot.com/p/introduction.html][terminator]] on Linux, [[https://www.iterm2.com/][iTerm2]] on macOS
+- [[http://www.gnu.org/software/emacs/manual/html_node/efaq/Colors-on-a-TTY.html][Set up and start Emacs]]
 ** Grep/Replace text in project
 Many third party plugins bundled in this setup have already provided enough features. For example, if you use =git=, =counsel-git-grep= from package [[https://github.com/abo-abo/swiper][counsel/ivy]] works out of the box.
 
@@ -587,10 +582,6 @@ My own snippets is at =~/.emacs.d/snippets=.
 The git hooks is placed in =~/.emacs.d/githooks= directory.
 
 Other directories don't matter.
-** True colors in terminal Emacs
-- Install Emacs 26
-- Install [[https://gist.github.com/XVilka/8346728][terminals supporting true color]]. I suggest [[https://mintty.github.io/][mintty]] on Windows, [[https://gnometerminator.blogspot.com/p/introduction.html][terminator]] on Linux, [[https://www.iterm2.com/][iTerm2]] on macOS
-- [[https://www.gnu.org/software/emacs/draft/manual/html_mono/efaq.html#Colors-on-a-TTY][Setup and start Emacs]]
 ** Run the unit test before git commit
 On macOS/Linux/Cygwin, run =make githooks= to install hooks into =~/.emacs.d/.git/hooks=.
 
@@ -649,9 +640,16 @@ Please use [[https://github.com/redguardtoo/emacs.d/archive/2.9.zip]] and [[http
 - Git skills are *extremely useful*. Please read the chapters "Git Basics", "Git Branching", "Git Tools" from [[https://git-scm.com/book/en/][Pro Git]]
 - You can run =optimize-emacs-startup= to compile "*.el" under =~/.emacs.d/lisp/=
 * Report bug
-- Please check [[http://www.emacswiki.org/emacs/][EmacsWiki]] and my FAQ at first
-- If you still can't resolve the issue, restart Emacs with option =---debug-init=, run =M-x toggle-debug-on-error= in Emacs. Try to reproduce the issue
-- Send error messages to the original developer if it's third party package's problem
-- If *you are sure* it's this setup's problem, file bug report at [[https://github.com/redguardtoo/emacs.d]]. Don't email me!
+Please check [[http://www.emacswiki.org/emacs/][EmacsWiki]] and my FAQ at first
 
-Bug report should include details (OS, Emacs version ...).
+If you still can't resolve the issue, restart Emacs with option =---debug-init= in shell , run =M-x toggle-debug-on-error= in Emacs. Try to reproduce the issue
+
+The full command line to run Emacs is =emacs -nw --debug-init= in most environments.
+
+If you use [[https://emacsformacosx.com][Emacs for Mac OS X]], the command line is =/Application/Emacs.app/Contents/MacOS/Emacs -nw --debug-init=.
+
+Send error messages to the original developer if it's third party package's problem
+
+If *you are sure* it's this setup's problem, file bug report at [[https://github.com/redguardtoo/emacs.d]]. Don't email me!
+
+Bug report should include *environment details*.

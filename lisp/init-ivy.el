@@ -1,7 +1,6 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
 (ivy-mode 1) ; it enables ivy UI for `kill-buffer'
-(defvar test 1)
 
 (eval-after-load 'counsel
   '(progn
@@ -252,28 +251,33 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
   "Jump to a buffer position indexed by imenu."
   (interactive)
   (my-ensure 'counsel)
-  (let* ((cands (counsel--imenu-candidates))
-         (pre-selected (thing-at-point 'symbol))
-         (pos (point))
-         closest)
-    (dolist (c cands)
-      (let* ((item (cdr c))
-             (m (cdr item)))
-        (when (and m (<= (marker-position m) pos))
-          (cond
-           ((not closest)
-            (setq closest item))
-           ((< (- pos (marker-position m))
-               (- pos (marker-position (cdr closest))))
-            (setq closest item))))))
-    (if closest (setq pre-selected (car closest)))
-    (ivy-read "imenu items: " cands
-              :preselect pre-selected
-              :require-match t
-              :action #'counsel-imenu-action
-              :keymap counsel-imenu-map
-              :history 'counsel-imenu-history
-              :caller 'counsel-imenu)))
+  (cond
+   ;; `counsel--imenu-candidates' was created on 2019-10-12
+   ((fboundp 'counsel--imenu-candidates)
+    (let* ((cands (counsel--imenu-candidates))
+           (pre-selected (thing-at-point 'symbol))
+           (pos (point))
+           closest)
+      (dolist (c cands)
+        (let* ((item (cdr c))
+               (m (cdr item)))
+          (when (and m (<= (marker-position m) pos))
+            (cond
+             ((not closest)
+              (setq closest item))
+             ((< (- pos (marker-position m))
+                 (- pos (marker-position (cdr closest))))
+              (setq closest item))))))
+      (if closest (setq pre-selected (car closest)))
+      (ivy-read "imenu items: " cands
+                :preselect pre-selected
+                :require-match t
+                :action #'counsel-imenu-action
+                :keymap counsel-imenu-map
+                :history 'counsel-imenu-history
+                :caller 'counsel-imenu)))
+   (t
+    (counsel-imenu))))
 
 (defun my-imenu-or-list-tag-in-current-file ()
   "Combine the power of counsel-etags and imenu."
@@ -307,5 +311,12 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
 
 ;; (with-eval-after-load 'find-file-in-project
 ;;   (setq counsel-fzf-dir-function 'ffip-project-root))
+(defun my-counsel-company ()
+  "Input code from company backend using fuzzy matching."
+  (interactive)
+  (company-abort)
+  (let* ((company-backends '(company-ctags))
+         (company-ctags-fuzzy-match-p t))
+    (counsel-company)))
 
 (provide 'init-ivy)
