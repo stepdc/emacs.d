@@ -13,7 +13,7 @@
 (eval-after-load 'company
   '(progn
      ;; @see https://github.com/company-mode/company-mode/issues/348
-     (company-statistics-mode)
+     ;; (company-statistics-mode)
      (push 'company-cmake company-backends)
      (push 'company-c-headers company-backends)
      ;; can't work with TRAMP
