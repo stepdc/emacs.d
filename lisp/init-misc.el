@@ -1301,6 +1301,14 @@ Including indent-buffer, which should not be called automatically on save."
 (which-key-mode 1)
 ;; }}
 
+;; {{ eldoc
+(eval-after-load 'eldoc
+  '(progn
+     ;; multi-line message should not display too soon
+     (setq eldoc-idle-delay 1)
+     (setq eldoc-echo-area-use-multiline-p t)))
+;;}}
+
 ;; {{ stepdc misc
 ;; disable cursor blink in terminal
 (setq visible-cursor nil)
@@ -1309,8 +1317,12 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customized functions                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(eval-after-load 'evil-nerd-commenter
+  '(progn
+     (global-set-key (kbd "C-c l") 'my-imenu-or-list-tag-in-current-file)
+     ))
 (global-set-key (kbd "C-c k") 'counsel-rg)
-(global-set-key (kbd "C-c l") 'counsel-imenu)
+;; (global-set-key (kbd "C-c l") 'counsel-imenu)
 (global-set-key (kbd "C-c g") 'counsel-git)
 (global-set-key (kbd "M-*") 'pop-tag-mark)
 
@@ -1326,13 +1338,9 @@ Including indent-buffer, which should not be called automatically on save."
 (local-require 'eshell-toggle)
 (global-set-key (kbd "M-t") 'eshell-toggle)
 
+(when *is-a-mac*
+        (set-face-attribute 'default nil :height 140))
+
 ;; }}
-;; {{ eldoc
-(eval-after-load 'eldoc
-  '(progn
-     ;; multi-line message should not display too soon
-     (setq eldoc-idle-delay 1)
-     (setq eldoc-echo-area-use-multiline-p t)))
-;;}}
 
 (provide 'init-misc)
