@@ -1286,12 +1286,13 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customized functions                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(eval-after-load 'evil-nerd-commenter
-  '(progn
-     (global-set-key (kbd "C-c l") 'my-imenu-or-list-tag-in-current-file)
-     ))
+;;
+
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (global-set-key (kbd "C-c l") 'my-imenu-or-list-tag-in-current-file)))
+
 (global-set-key (kbd "C-c k") 'counsel-rg)
-;; (global-set-key (kbd "C-c l") 'counsel-imenu)
 (global-set-key (kbd "C-c g") 'counsel-git)
 (global-set-key (kbd "M-*") 'pop-tag-mark)
 
