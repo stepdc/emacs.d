@@ -16,6 +16,8 @@
     auto-package-update
     nov
     bbdb
+    native-complete
+    company-native-complete
     js2-mode ; need new features
     git-timemachine ; stable version is broken when git rename file
     evil-textobj-syntax
@@ -246,7 +248,6 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'fringe-helper)
 (require-package 'gitignore-mode)
 (require-package 'gitconfig-mode)
-(require-package 'gist)
 (require-package 'wgrep)
 (require-package 'request)
 (require-package 'lua-mode)
@@ -312,6 +313,8 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'yasnippet)
 (require-package 'yasnippet-snippets)
 (require-package 'company)
+(require-package 'native-complete)
+(require-package 'company-native-complete)
 (require-package 'company-c-headers)
 ;; (require-package 'company-statistics)
 (require-package 'elpy)
@@ -402,6 +405,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
      ample-zen-theme
      anti-zenburn-theme
      apropospriate-theme
+     atom-dark-theme
      atom-one-dark-theme
      badwolf-theme
      base16-theme
@@ -454,6 +458,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
      mustang-theme
      naquadah-theme
      noctilux-theme
+     nord-theme
      obsidian-theme
      occidental-theme
      oldlace-theme
@@ -476,6 +481,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
      soothe-theme
      spacegray-theme
      spacemacs-theme
+     srcery-theme
      subatomic-theme
      subatomic256-theme
      sublime-themes
@@ -493,8 +499,6 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
      white-sand-theme
      zen-and-art-theme
      zenburn-theme
-     atom-dark-theme
-     nord-theme
      zerodark-theme
      )))
 ;; }}
