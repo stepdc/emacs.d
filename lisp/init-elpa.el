@@ -114,13 +114,14 @@
     python
     spinner
     ;; company-tabnine
-    company-lsp
+    ;; company-lsp
     plan9-theme
     gotest
     flycheck
     flycheck-golangci-lint
     flycheck-rust
     emacs-ccls
+    ;; nox
     )
   "Packages to install from melpa-unstable.")
 

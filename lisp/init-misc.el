@@ -1278,39 +1278,4 @@ Including indent-buffer, which should not be called automatically on save."
      (setq eldoc-echo-area-use-multiline-p t)))
 ;;}}
 
-;; {{ stepdc misc
-;; disable cursor blink in terminal
-(setq visible-cursor nil)
-
-;; evil edit status settings
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Customized functions                ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (global-set-key (kbd "C-c l") 'my-imenu-or-list-tag-in-current-file)))
-
-(global-set-key (kbd "C-c k") 'counsel-rg)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "M-*") 'pop-tag-mark)
-
-;;
-(defadvice kill-region (before unix-werase activate compile)
-      "When called interactively with no active region, delete a single word
-    backwards instead."
-      (interactive
-       (if mark-active (list (region-beginning) (region-end))
-         (list (save-excursion (backward-word 1) (point)) (point)))))
-
-;; toggle-eshell
-(local-require 'eshell-toggle)
-(global-set-key (kbd "M-t") 'eshell-toggle)
-
-(when *is-a-mac*
-        (set-face-attribute 'default nil :height 140))
-
-;; }}
-
 (provide 'init-misc)

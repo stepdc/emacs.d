@@ -151,9 +151,10 @@
   ;; ediff configuration should be last so it can override
   ;; the key bindings in previous configuration
   (require-init 'init-ediff)
-  
+
   ;; stepdc configs
-  (require-init 'init-lsp)
+  (require-init 'init-stepdc)
+  ;; (require-init 'init-lsp)
   (require-init 'init-golang)
   (require-init 'init-flycheck)
 
@@ -180,7 +181,8 @@
   (message "Emacs startup time: %d seconds."
            (time-to-seconds (time-since emacs-load-start-time))))
 
-(load-theme 'plan9 t)
+;; (load-theme 'plan9 t)
+(load-theme 'doom-one-light t)
 
 ;;; Local Variables:
 ;;; no-byte-compile: t
