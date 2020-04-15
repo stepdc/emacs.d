@@ -284,12 +284,10 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
    (t
     (my-counsel-imenu))))
 
-(eval-after-load 'ivy
-  '(progn
-     ;; better performance on everything (especially windows), ivy-0.10.0 required
-     ;; @see https://github.com/abo-abo/swiper/issues/1218
-     ;; slow here
-     ;; (setq ivy-dynamic-exhibit-delay-ms 250)
+(with-eval-after-load "ivy"
+  ;; better performance on everything (especially windows), ivy-0.10.0 required
+  ;; @see https://github.com/abo-abo/swiper/issues/1218
+  ;; (setq ivy-dynamic-exhibit-delay-ms 250)
 
   ;; Press C-p and Enter to select current input as candidate
   ;; https://oremacs.com/2017/11/30/ivy-0.10.0/

@@ -35,6 +35,25 @@
 
 ;; }}
 
+(eval-after-load 'ivy
+  '(progn
+     ;; ffip root
+     (setq counsel-fzf-dir-function 'ffip-project-root)
+     (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
+     (setq ivy-initial-inputs-alist nil)))
+
+;; {{
+(eval-after-load 'python
+  '(progn
+     (setq lsp-python-ms-executable
+           "~/src/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer")))
+;; }}
+
+(eval-after-load 'company
+  '(progn
+     (add-to-list 'company-backends #'company-tabnine)
+     ))
+
 ;; {{ playground
 (exec-path-from-shell-initialize)
 (local-require 'nox)
