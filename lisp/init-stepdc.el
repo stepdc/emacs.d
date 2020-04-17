@@ -31,16 +31,17 @@
 (global-set-key (kbd "M-t") 'eshell-toggle)
 
 (when *is-a-mac*
-        (set-face-attribute 'default nil :height 140))
+        (set-face-attribute 'default nil :height 150))
 
 ;; }}
 
-(eval-after-load 'ivy
+(eval-after-load 'counsel
   '(progn
      ;; ffip root
      (setq counsel-fzf-dir-function 'ffip-project-root)
      (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
-     (setq ivy-initial-inputs-alist nil)))
+     ;; (setq ivy-initial-inputs-alist nil)
+     ))
 
 ;; {{
 (eval-after-load 'python
@@ -73,6 +74,23 @@
                'haskell-mode-hook
                ))
   (add-hook hook '(lambda () (nox-ensure))))
+
+;; }}
+
+;; {{ mode-line
+;; (require 'doom-modeline)
+;; (doom-modeline-mode 1)
+;; }}
+
+;; {{ ctags
+
+;; (local-require 'counsel-etags)
+(defun my-setup-develop-environment ()
+  "Set up my develop environment."
+  (interactive)
+  (unless (is-buffer-file-temp)
+	(add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)))
+(add-hook 'prog-mode-hook 'my-setup-develop-environment)
 
 ;; }}
 

@@ -124,6 +124,7 @@
     flycheck-rust
     emacs-ccls
     ;; nox
+    doom-modeline
     )
   "Packages to install from melpa-unstable.")
 
@@ -376,6 +377,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'flycheck)
 (require-package 'flycheck-golangci-lint)
 (require-package 'flycheck-rust)
+(require-package 'doom-modeline)
 
 ;; {{ Fixed expiring GNU ELPA keys
 ;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to
