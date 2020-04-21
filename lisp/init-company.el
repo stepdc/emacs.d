@@ -34,7 +34,7 @@
            company-dabbrev-ignore-case nil
            ;; press M-number to choose candidate
            company-show-numbers t
-           company-idle-delay 0
+           company-idle-delay .1
            company-echo-delay 0
            company-clang-insert-arguments nil
            company-require-match nil

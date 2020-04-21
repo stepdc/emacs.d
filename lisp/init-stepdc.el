@@ -52,8 +52,60 @@
 
 (eval-after-load 'company
   '(progn
+     (setq company-dabbrev-downcase nil
+           ;; make previous/next selection in the popup cycles
+           company-selection-wrap-around t
+           ;; Some languages use camel case naming convention,
+           ;; so company should be case sensitive.
+           company-dabbrev-ignore-case nil
+           ;; press M-number to choose candidate
+           company-show-numbers t
+           company-idle-delay 0
+           company-echo-delay 0
+           company-clang-insert-arguments nil
+           company-require-match nil
+           company-ctags-ignore-case t ; I use company-ctags instead
+           ;; @see https://github.com/company-mode/company-mode/issues/146
+           company-tooltip-align-annotations t)
+
+     (define-key company-active-map (kbd "C-j") #'company-select-next)
+     (define-key company-active-map (kbd "C-k") #'company-select-previous)
+     (define-key company-active-map (kbd "C-l") #'company-complete-selection)
+     (define-key company-active-map (kbd "C-n") #'company-select-next)
+     (define-key company-active-map (kbd "C-p") #'company-select-previous)
+     (define-key company-active-map (kbd "C-f") #'company-complete-selection)
+     (define-key company-active-map (kbd "C-w") #'kill-region)
+     (define-key company-active-map (kbd "TAB") #'company-complete-common-or-cycle)
+     (define-key company-active-map (kbd "<tab>") #'company-complete-common-or-cycle)
+     (define-key company-active-map (kbd "<backtab>") #'company-select-previous)
+     (define-key company-active-map (kbd "S-TAB") #'company-select-previous)
+
+     (defadvice company-echo-show (around disable-tabnine-upgrade-message activate)
+       (let ((company-message-func (ad-get-arg 0)))
+         (when (and company-message-func
+                    (stringp (funcall company-message-func)))
+           (unless (string-match "The free version of TabNine only indexes up to" (funcall company-message-func))
+             ad-do-it))))
      (add-to-list 'company-backends #'company-tabnine)
      ))
+
+;; {{ mode-line
+;; (require 'doom-modeline)
+;; (doom-modeline-mode 1)
+;; }}
+
+;; {{ ctags
+
+;; (local-require 'counsel-etags)
+(defun my-setup-develop-environment ()
+  "Set up my develop environment."
+  (interactive)
+  (unless (is-buffer-file-temp)
+	(add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)))
+(add-hook 'prog-mode-hook 'my-setup-develop-environment)
+
+;; }}
+
 
 ;; {{ playground
 (exec-path-from-shell-initialize)
@@ -77,21 +129,5 @@
 
 ;; }}
 
-;; {{ mode-line
-;; (require 'doom-modeline)
-;; (doom-modeline-mode 1)
-;; }}
-
-;; {{ ctags
-
-;; (local-require 'counsel-etags)
-(defun my-setup-develop-environment ()
-  "Set up my develop environment."
-  (interactive)
-  (unless (is-buffer-file-temp)
-	(add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)))
-(add-hook 'prog-mode-hook 'my-setup-develop-environment)
-
-;; }}
 
 (provide 'init-stepdc)
