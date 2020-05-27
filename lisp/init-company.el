@@ -10,91 +10,67 @@
           company-complete-selection
           company-complete-number)))
 
-(eval-after-load 'company
-  '(progn
-     ;; @see https://github.com/company-mode/company-mode/issues/348
-     ;; (company-statistics-mode)
-     (push 'company-cmake company-backends)
-     (push 'company-c-headers company-backends)
-     ;; can't work with TRAMP
-     (setq company-backends (delete 'company-ropemacs company-backends))
+(with-eval-after-load 'company
+  ;; @see https://github.com/company-mode/company-mode/issues/348
+  (company-statistics-mode)
+  (push 'company-cmake company-backends)
+  (push 'company-c-headers company-backends)
+  ;; can't work with TRAMP
+  (setq company-backends (delete 'company-ropemacs company-backends))
 
-     ;; company-ctags is much faster out of box. No further optimiation needed
-     (unless (featurep 'company-ctags) (local-require 'company-ctags))
-     (company-ctags-auto-setup)
+  ;; company-ctags is much faster out of box. No further optimiation needed
+  (unless (featurep 'company-ctags) (local-require 'company-ctags))
+  (company-ctags-auto-setup)
 
-     ;; (setq company-backends (delete 'company-capf company-backends))
+  ;; (setq company-backends (delete 'company-capf company-backends))
 
-     ;; I don't like the downcase word in company-dabbrev
-     (setq company-dabbrev-downcase nil
-           ;; make previous/next selection in the popup cycles
-           company-selection-wrap-around t
-           ;; Some languages use camel case naming convention,
-           ;; so company should be case sensitive.
-           company-dabbrev-ignore-case nil
-           ;; press M-number to choose candidate
-           company-show-numbers t
-           company-idle-delay .1
-           company-echo-delay 0
-           company-clang-insert-arguments nil
-           company-require-match nil
-           company-ctags-ignore-case t ; I use company-ctags instead
-           ;; @see https://github.com/company-mode/company-mode/issues/146
-           company-tooltip-align-annotations t)
+  ;; I don't like the downcase word in company-dabbrev
+  (setq company-dabbrev-downcase nil
+        ;; make previous/next selection in the popup cycles
+        company-selection-wrap-around t
+        ;; Some languages use camel case naming convention,
+        ;; so company should be case sensitive.
+        company-dabbrev-ignore-case nil
+        ;; press M-number to choose candidate
+        company-show-numbers t
+        company-idle-delay 0.2
+        company-clang-insert-arguments nil
+        company-require-match nil
+        company-ctags-ignore-case t ; I use company-ctags instead
+        ;; @see https://github.com/company-mode/company-mode/issues/146
+        company-tooltip-align-annotations t)
 
-     (define-key company-active-map (kbd "C-j") #'company-select-next)
-     (define-key company-active-map (kbd "C-k") #'company-select-previous)
-     (define-key company-active-map (kbd "C-l") #'company-complete-selection)
-     (define-key company-active-map (kbd "C-n") #'company-select-next)
-     (define-key company-active-map (kbd "C-p") #'company-select-previous)
-     (define-key company-active-map (kbd "C-f") #'company-complete-selection)
-     (define-key company-active-map (kbd "C-w") #'kill-region)
-     (define-key company-active-map (kbd "TAB") #'company-complete-common-or-cycle)
-     (define-key company-active-map (kbd "<tab>") #'company-complete-common-or-cycle)
-     (define-key company-active-map (kbd "<backtab>") #'company-select-previous)
-     (define-key company-active-map (kbd "S-TAB") #'company-select-previous)
+  ;; Press SPACE will accept the highlighted candidate and insert a space
+  ;; "M-x describe-variable company-auto-complete-chars" for details.
+  ;; So that's BAD idea.
+  (setq company-auto-complete nil)
 
-     (defadvice company-echo-show (around disable-tabnine-upgrade-message activate)
-       (let ((company-message-func (ad-get-arg 0)))
-         (when (and company-message-func
-                    (stringp (funcall company-message-func)))
-           (unless (string-match "The free version of TabNine only indexes up to" (funcall company-message-func))
-             ad-do-it))))
+  ;; NOT to load company-mode for certain major modes.
+  ;; Ironic that I suggested this feature but I totally forgot it
+  ;; until two years later.
+  ;; https://github.com/company-mode/company-mode/issues/29
+  (setq company-global-modes
+        '(not
+          eshell-mode
+          comint-mode
+          erc-mode
+          gud-mode
+          rcirc-mode
+          minibuffer-inactive-mode)))
 
-     ;; @see https://github.com/redguardtoo/emacs.d/commit/2ff305c1ddd7faff6dc9fa0869e39f1e9ed1182d
-     (defadvice company-in-string-or-comment (around company-in-string-or-comment-hack activate)
-       (if (memq major-mode '(php-mode html-mode web-mode nxml-mode))
-           (setq ad-return-value nil)
-         ad-do-it))
-
-     ;; press SPACE will accept the highlighted candidate and insert a space
-     ;; `M-x describe-variable company-auto-complete-chars` for details
-     ;; That's BAD idea.
-     (setq company-auto-complete nil)
-
-     ;; NOT to load company-mode for certain major modes.
-     ;; Ironic that I suggested this feature but I totally forgot it
-     ;; until two years later.
-     ;; https://github.com/company-mode/company-mode/issues/29
-     (setq company-global-modes
-           '(not
-             eshell-mode comint-mode erc-mode gud-mode rcirc-mode
-             minibuffer-inactive-mode))))
-
-(eval-after-load 'company-ispell
-  '(progn
-     (defadvice company-ispell-available (around company-ispell-available-hack activate)
-       ;; in case evil is disabled
-       (my-ensure 'evil-nerd-commenter)
-       (cond
-        ((and (derived-mode-p 'prog-mode)
-              (or (not (company-in-string-or-comment)) ; respect advice in `company-in-string-or-comment'
-                  (not (evilnc-is-pure-comment (point))))) ; auto-complete in comment only
-         ;; only use company-ispell in comment when coding
-         (setq ad-return-value nil))
-        (t
-         ad-do-it)))))
-
+(with-eval-after-load 'company-ispell
+  (defun my-company-ispell-available-hack (orig-func &rest args)
+    ;; in case evil is disabled
+    (my-ensure 'evil-nerd-commenter)
+    (cond
+     ((and (derived-mode-p 'prog-mode)
+           (or (not (company-in-string-or-comment)) ; respect advice in `company-in-string-or-comment'
+               (not (evilnc-is-pure-comment (point))))) ; auto-complete in comment only
+      ;; only use company-ispell in comment when coding
+      nil)
+     (t
+      (apply orig-func args))))
+  (advice-add 'company-ispell-available :around #'my-company-ispell-available-hack))
 
 (defun my-add-ispell-to-company-backends ()
   "Add ispell to the last of `company-backends'."
@@ -124,7 +100,7 @@
            ispell-alternate-dictionary)
       (setq company-ispell-dictionary ispell-alternate-dictionary))
      (t
-      (setq company-ispell-dictionary (file-truename "~/.emacs.d/misc/english-words.txt"))))))
+       (setq company-ispell-dictionary (file-truename (concat my-emacs-d "misc/english-words.txt")))))))
 
 ;; message-mode use company-bbdb.
 ;; So we should NOT turn on company-ispell
