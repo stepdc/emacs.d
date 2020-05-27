@@ -129,5 +129,11 @@
 
 ;; }}
 
+;; {{ rust
+(add-auto-mode 'rust-mode "\\.rs\\'")
+(setq rust-format-on-save t)
+;; }}
+
+
 
 (provide 'init-stepdc)
