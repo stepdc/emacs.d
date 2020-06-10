@@ -18,7 +18,6 @@
     bbdb
     native-complete
     company-native-complete
-    flymake-shellcheck ; check shell script
     js2-mode ; need new features
     git-timemachine ; stable version is broken when git rename file
     evil-textobj-syntax
@@ -98,7 +97,6 @@
     pyim-basedict
     scratch
     session
-    flymake-lua
     multi-term
     inflections
     lua-mode
@@ -289,7 +287,6 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'cpputils-cmake)
 (require-package 'bbdb)
 (require-package 'pomodoro)
-(require-package 'flymake-lua)
 ;; rvm-open-gem to get gem's code
 (require-package 'rvm)
 ;; C-x r l to list bookmarks
@@ -376,7 +373,6 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 ;; }}
 
 (when *emacs26*
-  (require-package 'flymake-shellcheck)
   ;; org => ppt, org v8.3 is required (Emacs 25 uses org v8.2)
   (require-package 'org-re-reveal))
 
@@ -419,6 +415,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
      espresso-theme
      exotica-theme
      eziam-theme
+     fantom-theme
      farmhouse-theme
      flatland-theme
      flatui-theme
@@ -487,6 +484,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
      twilight-theme
      ujelly-theme
      underwater-theme
+     vscode-dark-plus-theme
      white-sand-theme
      zen-and-art-theme
      zenburn-theme
