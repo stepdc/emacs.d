@@ -39,6 +39,7 @@
   '(progn
      ;; ffip root
      (setq counsel-fzf-dir-function 'ffip-project-root)
+     (setq counsel-fzf-cmd "fd --type f | fzf -f \"%s\"")
      (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
      ;; (setq ivy-initial-inputs-alist nil)
      ))
@@ -68,6 +69,16 @@
            ;; @see https://github.com/company-mode/company-mode/issues/146
            company-tooltip-align-annotations t)
 
+     ;; Customize company backends.
+     (setq company-backends (delete 'company-xcode company-backends))
+     (setq company-backends (delete 'company-bbdb company-backends))
+     (setq company-backends (delete 'company-eclim company-backends))
+     (setq company-backends (delete 'company-gtags company-backends))
+     (setq company-backends (delete 'company-etags company-backends))
+     (setq company-backends (delete 'company-oddmuse company-backends))
+     (add-to-list 'company-backends 'company-files)
+     (setq company-minimum-prefix-length 1) ; pop up a completion menu by tapping a character
+
      (define-key company-active-map (kbd "C-j") #'company-select-next)
      (define-key company-active-map (kbd "C-k") #'company-select-previous)
      (define-key company-active-map (kbd "C-l") #'company-complete-selection)
@@ -80,13 +91,15 @@
      (define-key company-active-map (kbd "<backtab>") #'company-select-previous)
      (define-key company-active-map (kbd "S-TAB") #'company-select-previous)
 
-     (defadvice company-echo-show (around disable-tabnine-upgrade-message activate)
-       (let ((company-message-func (ad-get-arg 0)))
-         (when (and company-message-func
-                    (stringp (funcall company-message-func)))
-           (unless (string-match "The free version of TabNine only indexes up to" (funcall company-message-func))
-             ad-do-it))))
+     ;; (defadvice company-echo-show (around disable-tabnine-upgrade-message activate)
+     ;;   (let ((company-message-func (ad-get-arg 0)))
+     ;;     (when (and company-message-func
+     ;;                (stringp (funcall company-message-func)))
+     ;;       (unless (string-match "The free version of TabNine only indexes up to" (funcall company-message-func))
+     ;;         ad-do-it))))
+
      (add-to-list 'company-backends #'company-tabnine)
+     ;; (toggle-company-ispell)
      ))
 
 ;; {{ mode-line
@@ -97,12 +110,12 @@
 ;; {{ ctags
 
 ;; (local-require 'counsel-etags)
-(defun my-setup-develop-environment ()
-  "Set up my develop environment."
-  (interactive)
-  (unless (is-buffer-file-temp)
-	(add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)))
-(add-hook 'prog-mode-hook 'my-setup-develop-environment)
+;; (defun my-setup-develop-environment ()
+;;   "Set up my develop environment."
+;;   (interactive)
+;;   (unless (is-buffer-file-temp)
+;;     (add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)))
+;; (add-hook 'prog-mode-hook 'my-setup-develop-environment)
 
 ;; }}
 
@@ -126,6 +139,7 @@
                'haskell-mode-hook
                ))
   (add-hook hook '(lambda () (nox-ensure))))
+;; (add-hook 'go-mode-hook 'eglot-ensure)
 
 ;; }}
 
@@ -133,7 +147,5 @@
 (add-auto-mode 'rust-mode "\\.rs\\'")
 (setq rust-format-on-save t)
 ;; }}
-
-
 
 (provide 'init-stepdc)

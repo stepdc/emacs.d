@@ -344,6 +344,7 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
 
 ;; (with-eval-after-load 'find-file-in-project
 ;;   (setq counsel-fzf-dir-function 'ffip-project-root))
+
 (defun my-counsel-company ()
   "Input code from company backend using fuzzy matching."
   (interactive)

@@ -115,12 +115,12 @@
     python
     spinner
     company-tabnine
-    ;; company-lsp
+    company-lsp
     plan9-theme
     gotest
-    flycheck
-    flycheck-golangci-lint
-    flycheck-rust
+    ;; flycheck
+    ;; flycheck-golangci-lint
+    ;; flycheck-rust
     emacs-ccls
     ;; nox
     doom-modeline
@@ -359,10 +359,10 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'company-tabnine)
 (require-package 'plan9-theme)
 (require-package 'gotest)
-(require-package 'flycheck)
-(require-package 'flycheck-golangci-lint)
-(require-package 'flycheck-rust)
-(require-package 'doom-modeline)
+;; (require-package 'flycheck)
+;; (require-package 'flycheck-golangci-lint)
+;; (require-package 'flycheck-rust)
+;; (require-package 'doom-modeline)
 
 ;; {{ Fixed expiring GNU ELPA keys
 ;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to
