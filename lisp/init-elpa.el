@@ -124,6 +124,10 @@
     emacs-ccls
     ;; nox
     doom-modeline
+    ;; epubs
+    nov-mode
+    shrface
+    bing-dict
     )
   "Packages to install from melpa-unstable.")
 

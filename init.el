@@ -163,7 +163,7 @@
 
   ;; stepdc configs
   (require-init 'init-stepdc)
-  ;; (require-init 'init-lsp)
+  (require-init 'init-lsp)
   (require-init 'init-golang)
   (require-init 'init-flycheck)
 
