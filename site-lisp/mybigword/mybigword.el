@@ -4,7 +4,7 @@
 ;;
 ;; Author: Chen Bin <chenbin DOT sh AT gmail.com>
 ;; URL: https://github.com/redguardtoo/mybigword
-;; Version: 0.0.7
+;; Version: 0.0.8
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "25.1"))
 ;;
@@ -474,7 +474,7 @@ FILE is the file path."
   "Use START-TIME and VIDEO-PATH to run mplayer."
   (when start-time
     (let* ((default-directory (file-name-directory video-path))
-	   (cmd (format "%s -ss %s -osdlevel 2 %s"
+	   (cmd (format "%s -ss %s -osdlevel 2 \"%s\""
 			mybigword-mplayer-program
 			(mybigword-adjust-start-time start-time)
 			(file-name-nondirectory video-path))))
@@ -512,9 +512,13 @@ The information is in current org node's \"SRT_PATH\" property."
 (defun mybigword-play-video-of-word-at-point ()
   "Search video's subtitle (*.srt) and play the video containing the word.
 The video file should be in the same directory of subtitle.
-Its file name should be similar to the subtitle's file name."
+Its file name should be similar to the subtitle's file name.
+The word is either the word at point, or selected string or string from input."
   (interactive)
-  (let* ((word (or (thing-at-point 'word) (read-string "Input a word: ")))
+  (let* ((word (or (and (region-active-p)
+                        (buffer-substring (region-beginning) (region-end)))
+                   (thing-at-point 'word)
+                   (read-string "Input a word: ")))
          info)
     (when (and word
                (setq info (funcall mybigword-default-video-info-function word)))
@@ -536,11 +540,14 @@ Its file name should be similar to the subtitle's file name."
   "Program to play mp3."
   (cond
    ;; macOS
-   ((eq system-type 'darwin) "open")
+   ((eq system-type 'darwin)
+    "open")
    ;; Windows
-   ((eq system-type 'windows-nt) "start")
+   ((eq system-type 'windows-nt)
+    "start")
    ;; Use mplayer
-   (t mybigword-mplayer-program)))
+   (t
+    mybigword-mplayer-program)))
 
 (defun mybigword-get-download-directory ()
   "Get download directory."
@@ -557,8 +564,8 @@ Its file name should be similar to the subtitle's file name."
   "Use cambridge dictionary to pronounce WORD."
   (setq word (downcase word))
   (let* ((cached-mp3 (file-truename (concat (mybigword-get-download-directory) word ".mp3")))
-	 (player (mybigword-play-mp3-program))
-	 online-mp3)
+         (player (mybigword-play-mp3-program))
+         online-mp3)
     (cond
      ((file-exists-p cached-mp3)
       (mybigword-async-shell-command (format "%s %s" player cached-mp3)))

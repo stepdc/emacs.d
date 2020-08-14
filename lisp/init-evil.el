@@ -13,13 +13,35 @@
 ;; enable evil-mode
 (evil-mode 1)
 
-;; @see https://github.com/syl20bnr/evil-iedit-state#key-bindings
-;; Don't know why it's not loaded if placed in elpa
-(local-require 'evil-iedit-state)
+;; {{ replace undo-tree with undo-fu
+;; @see https://github.com/emacs-evil/evil/issues/1074
+;; (global-undo-tree-mode -1)
+(my-ensure 'undo-fu)
+;; copied from doom-emacs
+(define-minor-mode undo-fu-mode
+  "Enables `undo-fu' for the current session."
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map [remap undo] #'undo-fu-only-undo)
+            (define-key map [remap redo] #'undo-fu-only-redo)
+            (define-key map (kbd "C-_")     #'undo-fu-only-undo)
+            (define-key map (kbd "M-_")     #'undo-fu-only-redo)
+            (define-key map (kbd "C-M-_")   #'undo-fu-only-redo-all)
+            (define-key map (kbd "C-x r u") #'undo-fu-session-save)
+            (define-key map (kbd "C-x r U") #'undo-fu-session-recover)
+            map)
+  :init-value nil
+  :global t)
+(undo-fu-mode 1)
+;; }}
+
+;; Store more undo history to prevent loss of data
+(setq undo-limit 8000000
+      undo-strong-limit 8000000
+      undo-outer-limit 8000000)
 
 (defvar my-use-m-for-matchit nil
   "If t, use \"m\" key for `evil-matchit-mode'.
-And \"%\" key is also retored to `evil-jump-item'.")
+And \"%\" key is also restored to `evil-jump-item'.")
 
 ;; {{ @see https://github.com/timcharper/evil-surround for tutorial
 (global-evil-surround-mode 1)
@@ -32,15 +54,15 @@ And \"%\" key is also retored to `evil-jump-item'.")
     (push '(?$ . ("${" . "}")) evil-surround-pairs-alist)))
 
   (when (memq major-mode '(org-mode))
-   (push '(91 . ("[[" . "]]")) evil-surround-pairs-alist) ; [
-   (push '(?= . ("=" . "=")) evil-surround-pairs-alist))
+    (push '(?\[ . ("[[" . "]]")) evil-surround-pairs-alist) ; [
+    (push '(?= . ("=" . "=")) evil-surround-pairs-alist))
 
   (when (memq major-mode '(emacs-lisp-mode))
-   (push '(?\( . ("( " . ")")) evil-surround-pairs-alist)
-   (push '(?` . ("`" . "'")) evil-surround-pairs-alist))
+    (push '(?\( . ("( " . ")")) evil-surround-pairs-alist)
+    (push '(?` . ("`" . "'")) evil-surround-pairs-alist))
 
   (when (derived-mode-p 'js-mode)
-   (push '(?> . ("(e) => " . "(e)")) evil-surround-pairs-alist))
+    (push '(?> . ("(e) => " . "(e)")) evil-surround-pairs-alist))
 
   ;; generic
   (push '(?/ . ("/" . "/")) evil-surround-pairs-alist))
@@ -171,7 +193,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
     rlt))
 
 (defun my-evil-path-extract-region ()
-  "Find the closest file path"
+  "Find the closest file path."
   (let* (rlt b f1 f2)
     (if (and (not (my-evil-path-not-path-char (following-char)))
              (setq rlt (my-evil-path-get-path-already-inside)))
@@ -233,7 +255,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; with upper cased character or 'g' or special character except "=" and "-"
 (evil-declare-key 'normal org-mode-map
   "gh" 'outline-up-heading
-  "gl" 'outline-next-visible-heading
   "$" 'org-end-of-line ; smarter behaviour on headlines etc.
   "^" 'org-beginning-of-line ; ditto
   "<" (lambda () (interactive) (org-demote-or-promote 1)) ; out-dent
@@ -242,8 +263,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 
 (evil-declare-key 'normal markdown-mode-map
   "gh" 'outline-up-heading
-  "gl" 'outline-next-visible-heading
-  (kbd "TAB") 'org-cycle)
+  (kbd "TAB") 'markdown-cycle)
 
 ;; {{ specify major mode uses Evil (vim) NORMAL state or EMACS original state.
 ;; You may delete this setup to use Evil NORMAL state always.
@@ -489,6 +509,17 @@ If INCLUSIVE is t, the text object is inclusive."
   :prefix ","
   :states '(normal visual))
 
+(defun my-rename-thing-at-point ()
+  "Rename thing at point."
+  (interactive)
+  (cond
+   ((derived-mode-p 'js2-mode)
+    ;; use `js2-mode' parser, much smarter and works in any scope
+    (js2hl-rename-thing-at-point))
+   (t
+    ;; simple string search/replace in function scope
+    (evilmr-replace-in-defun))))
+
 (my-comma-leader-def
   "," 'evilnc-comment-operator
   "bf" 'beginning-of-defun
@@ -537,7 +568,7 @@ If INCLUSIVE is t, the text object is inclusive."
   "wk" 'evil-window-up
   "wj" 'evil-window-down
   ;; }}
-  "rv" 'evilmr-replace-in-defun
+  "rv" 'my-rename-thing-at-point
   "rb" 'evilmr-replace-in-buffer
   "ts" 'evilmr-tag-selected-region ;; recommended
   "cby" 'cb-switch-between-controller-and-view
@@ -560,7 +591,6 @@ If INCLUSIVE is t, the text object is inclusive."
   "lq" 'highlight-symbol-query-replace
   "ln" 'highlight-symbol-nav-mode ; use M-n/M-p to navigation between symbols
   "ii" 'my-imenu-or-list-tag-in-current-file
-  "." 'evil-ex
   ;; @see https://github.com/pidu/git-timemachine
   ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
   "tm" 'my-git-timemachine
@@ -683,9 +713,9 @@ If INCLUSIVE is t, the text object is inclusive."
   "xc" 'save-buffers-kill-terminal ; not used frequently
   "cc" 'my-dired-redo-last-command
   "ss" 'wg-create-workgroup ; save windows layout
-  "ee" 'evil-iedit-state/iedit-mode ; start iedit in emacs to rename variables in defun
   "sc" 'shell-command
-  "ll" 'my-wg-switch-workgroup ; load windows layout
+  "ll" 'wg-open-workgroup ; load windows layout
+
   "jj" 'scroll-other-window
   "kk" 'scroll-other-window-up
   "hh" 'random-healthy-color-theme
@@ -711,38 +741,38 @@ If INCLUSIVE is t, the text object is inclusive."
   :keymaps 'js2-mode-map)
 
 (my-javascript-leader-def
- "de" 'js2-display-error-list
- "nn" 'js2-next-error
- "te" 'js2-mode-toggle-element
- "tf" 'js2-mode-toggle-hide-functions
- "jeo" 'js2r-expand-object
- "jco" 'js2r-contract-object
- "jeu" 'js2r-expand-function
- "jcu" 'js2r-contract-function
- "jea" 'js2r-expand-array
- "jca" 'js2r-contract-array
- "jwi" 'js2r-wrap-buffer-in-iife
- "jig" 'js2r-inject-global-in-iife
- "jev" 'js2r-extract-var
- "jiv" 'js2r-inline-var
- "jrv" 'js2r-rename-var
- "jvt" 'js2r-var-to-this
- "jag" 'js2r-add-to-globals-annotation
- "jsv" 'js2r-split-var-declaration
- "jss" 'js2r-split-string
- "jef" 'js2r-extract-function
- "jem" 'js2r-extract-method
- "jip" 'js2r-introduce-parameter
- "jlp" 'js2r-localize-parameter
- "jtf" 'js2r-toggle-function-expression-and-declaration
- "jao" 'js2r-arguments-to-object
- "juw" 'js2r-unwrap
- "jwl" 'js2r-wrap-in-for-loop
- "j3i" 'js2r-ternary-to-if
- "jlt" 'js2r-log-this
- "jsl" 'js2r-forward-slurp
- "jba" 'js2r-forward-barf
- "jk" 'js2r-kill)
+  "de" 'js2-display-error-list
+  "nn" 'js2-next-error
+  "te" 'js2-mode-toggle-element
+  "tf" 'js2-mode-toggle-hide-functions
+  "jeo" 'js2r-expand-object
+  "jco" 'js2r-contract-object
+  "jeu" 'js2r-expand-function
+  "jcu" 'js2r-contract-function
+  "jea" 'js2r-expand-array
+  "jca" 'js2r-contract-array
+  "jwi" 'js2r-wrap-buffer-in-iife
+  "jig" 'js2r-inject-global-in-iife
+  "jev" 'js2r-extract-var
+  "jiv" 'js2r-inline-var
+  "jrv" 'js2r-rename-var
+  "jvt" 'js2r-var-to-this
+  "jag" 'js2r-add-to-globals-annotation
+  "jsv" 'js2r-split-var-declaration
+  "jss" 'js2r-split-string
+  "jef" 'js2r-extract-function
+  "jem" 'js2r-extract-method
+  "jip" 'js2r-introduce-parameter
+  "jlp" 'js2r-localize-parameter
+  "jtf" 'js2r-toggle-function-expression-and-declaration
+  "jao" 'js2r-arguments-to-object
+  "juw" 'js2r-unwrap
+  "jwl" 'js2r-wrap-in-for-loop
+  "j3i" 'js2r-ternary-to-if
+  "jlt" 'js2r-log-this
+  "jsl" 'js2r-forward-slurp
+  "jba" 'js2r-forward-barf
+  "jk" 'js2r-kill)
 ;; }}
 
 (defun my-evil-delete-hack (orig-func &rest args)
@@ -762,24 +792,24 @@ If INCLUSIVE is t, the text object is inclusive."
   :states '(normal visual))
 
 (my-semicolon-leader-def
- ;; Search character(s) at the beginning of word
- ;; See https://github.com/abo-abo/avy/issues/70
- ;; You can change the avy font-face in ~/.custom.el:
- ;;  (with-eval-after-load 'avy
- ;;    (set-face-attribute 'avy-lead-face-0 nil :foreground "black")
- ;;    (set-face-attribute 'avy-lead-face-0 nil :background "#f86bf3"))
- ";" 'ace-pinyin-jump-char-2
- "w" 'avy-goto-word-or-subword-1
- "a" 'avy-goto-char-timer
- "db" 'sdcv-search-input ; details
- "dt" 'sdcv-search-input+ ; summary
- "dd" 'my-lookup-dict-org
- "mm" 'lookup-doc-in-man
- "gg" 'w3m-google-search
- "gd" 'w3m-search-financial-dictionary
- "ga" 'w3m-java-search
- "gh" 'w3mext-hacker-search ; code search in all engines with firefox
- "gq" 'w3m-stackoverflow-search)
+  ;; Search character(s) at the beginning of word
+  ;; See https://github.com/abo-abo/avy/issues/70
+  ;; You can change the avy font-face in ~/.custom.el:
+  ;;  (with-eval-after-load 'avy
+  ;;    (set-face-attribute 'avy-lead-face-0 nil :foreground "black")
+  ;;    (set-face-attribute 'avy-lead-face-0 nil :background "#f86bf3"))
+  ";" 'ace-pinyin-jump-char-2
+  "w" 'avy-goto-word-or-subword-1
+  "a" 'avy-goto-char-timer
+  "db" 'sdcv-search-input ; details
+  "dt" 'sdcv-search-input+ ; summary
+  "dd" 'my-lookup-dict-org
+  "mm" 'lookup-doc-in-man
+  "gg" 'w3m-google-search
+  "gd" 'w3m-search-financial-dictionary
+  "ga" 'w3m-java-search
+  "gh" 'w3mext-hacker-search ; code search in all engines with firefox
+  "gq" 'w3m-stackoverflow-search)
 ;; }}
 
 ;; {{ remember what we searched
@@ -805,7 +835,7 @@ If INCLUSIVE is t, the text object is inclusive."
 
 ;; {{ change mode-line color by evil state
 (defconst my-default-color (cons (face-background 'mode-line)
-                                  (face-foreground 'mode-line)))
+                                 (face-foreground 'mode-line)))
 (defun my-show-evil-state ()
   "Change mode line color to notify user evil current state."
   (let* ((color (cond ((minibufferp) my-default-color)
@@ -868,27 +898,12 @@ If INCLUSIVE is t, the text object is inclusive."
 (evil-exchange-install)
 ;; }}
 
-;; {{ evil-lion
-;; After pressing `glip=` or `gl2j=` (gl is the operator, ip or 2j is text object, = separator):
-;; one = 1
-;; three = 3
-;; fifteen = 15
-;;
-;; will become:
-;; one     = 1
-;; three   = 3
-;; fifteen = 15
-;;
-;; If the align separator is / you will be prompted for a regular expression instead of a plain character.
-(evil-lion-mode)
-;; }}
-
 ;; {{ @see https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#replacing-text-with-iedit
-;; same keybindgs as spacemacs:
+;; same keybindings as spacemacs:
 ;;  - Start `iedit-mode' by `evil-iedit-state/iedit-mode'
 ;;  - "TAB" to toggle current occurrence
 ;;  - "n" next, "N" previous (obviously we use "p" for yank)
-;;  - "gg" the first occurence, "G" the last occurence
+;;  - "gg" the first occurrence, "G" the last occurrence
 ;;  - Please note ";;" or `avy-goto-char-timer' is also useful
 ;; }}
 
@@ -955,9 +970,9 @@ If INCLUSIVE is t, the text object is inclusive."
   ;; @see https://bitbucket.org/lyro/evil/issue/511/let-certain-minor-modes-key-bindings
   (defmacro adjust-major-mode-keymap-with-evil (m &optional r)
     `(with-eval-after-load (quote ,(if r r m))
-          (evil-make-overriding-map ,(intern (concat m "-mode-map")) 'normal)
-          ;; force update evil keymaps after git-timemachine-mode loaded
-          (add-hook (quote ,(intern (concat m "-mode-hook"))) #'evil-normalize-keymaps)))
+       (evil-make-overriding-map ,(intern (concat m "-mode-map")) 'normal)
+       ;; force update evil keymaps after git-timemachine-mode loaded
+       (add-hook (quote ,(intern (concat m "-mode-hook"))) #'evil-normalize-keymaps)))
 
   (adjust-major-mode-keymap-with-evil "git-timemachine")
 

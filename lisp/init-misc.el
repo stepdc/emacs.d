@@ -67,7 +67,7 @@
 ;; {{ find-file-in-project (ffip)
 (with-eval-after-load 'find-file-in-project
   (defun my-search-git-reflog-code ()
-    (let* ((default-directory (locate-dominating-file default-directory ".git")))
+    (let* ((default-directory (my-git-root-dir)))
       (ffip-shell-command-to-string (format "git --no-pager reflog --date=short -S\"%s\" -p"
                                             (read-string "Regex: ")))))
   (push 'my-search-git-reflog-code ffip-diff-backends)
@@ -118,21 +118,6 @@
 ;; @see http://blog.binchen.org/posts/effective-code-navigation-for-web-development.html
 ;; don't let the cursor go into minibuffer prompt
 (setq minibuffer-prompt-properties (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
-
-;; {{ comint-mode
-(with-eval-after-load 'comint
-  ;; Don't echo passwords when communicating with interactive programs:
-  ;; Github prompt is like "Password for 'https://user@github.com/':"
-  (setq comint-password-prompt-regexp
-        (format "%s\\|^ *Password for .*: *$" comint-password-prompt-regexp))
-  (add-hook 'comint-output-filter-functions 'comint-watch-for-password-prompt))
-(defun comint-mode-hook-setup ()
-  ;; look up shell command history
-  (local-set-key (kbd "M-n") 'counsel-shell-history)
-  ;; Don't show trailing whitespace in REPL.
-  (local-set-key (kbd "M-;") 'comment-dwim))
-(add-hook 'comint-mode-hook 'comint-mode-hook-setup)
-;; }}
 
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-m") 'counsel-M-x)
@@ -1190,10 +1175,10 @@ See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
       (shell-command (format "%s --dir . &" cmd-prefix))))))
 ;; }}
 
+(defvar my-sdcv-org-head-level 2)
 ;; {{ use sdcv dictionary to find big word definition
 (defun my-sdcv-format-bigword (word zipf)
   "Format WORD and ZIPF using sdcv dictionary."
-  (ignore zipf)
   (let* (rlt def)
     (local-require 'sdcv)
     ;; 2 level org format
@@ -1202,7 +1187,11 @@ See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
           (setq def (sdcv-search-witch-dictionary word sdcv-dictionary-complete-list))
           (setq def (replace-regexp-in-string "^-->.*" "" def))
           (setq def (replace-regexp-in-string "[\n\r][\n\r]+" "" def))
-          (setq rlt (format "** %s\n%s\n" word def)))
+          (setq rlt (format "%s %s (%s)\n%s\n"
+                            (make-string my-sdcv-org-head-level ?*)
+                            word
+                            zipf
+                            def)))
       (error nil))
     rlt))
 
