@@ -117,9 +117,9 @@
     company-lsp
     plan9-theme
     gotest
-    ;; flycheck
+    flycheck
     ;; flycheck-golangci-lint
-    ;; flycheck-rust
+    flycheck-rust
     emacs-ccls
     ;; nox
     doom-modeline
