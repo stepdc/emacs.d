@@ -932,9 +932,11 @@ If INCLUSIVE is t, the text object is inclusive."
 (define-key evil-normal-state-map "K" 'evil-jump-out-args)
 ;; }}
 
-;; In insert mode, press "fg" in 0.3 second to trigger my-counsel-company
-;; Run "grep fg english-words.txt", got "afghan".
-;; "afgan" is rarely used when programming
+;; ;; In insert mode, press "fg" in 0.3 second to trigger my-counsel-company
+;; ;; Run "grep fg english-words.txt", got "afghan".
+;; ;; "afgan" is rarely used when programming
+;; ;; Insert below code to ~/.custome.el if your really want this feature.
+;; ;; @see https://github.com/redguardtoo/emacs.d/issues/870 first
 ;; (general-imap "f"
 ;;   (general-key-dispatch 'self-insert-command
 ;;     :timeout 0.3
