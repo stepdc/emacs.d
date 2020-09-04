@@ -108,12 +108,12 @@
     zoutline
     company-c-headers
     ;; company-statistics
-    lsp-mode
-    lsp-python-ms
+    ;; lsp-mode
+    ;; lsp-python-ms
     python
     spinner
     company-tabnine
-    company-lsp
+    ;; company-lsp
     plan9-theme
     gotest
     flycheck
@@ -351,13 +351,13 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'pyim-wbdict) ; someone may use wubi IME, not me
 
 ;; stepdc requires
-(require-package 'lsp-mode)
-(require-package 'lsp-python-ms)
-(require-package 'company-lsp)
+;; (require-package 'lsp-mode)
+;; (require-package 'lsp-python-ms)
+;; (require-package 'company-lsp)
 (require-package 'company-tabnine)
 (require-package 'plan9-theme)
 (require-package 'gotest)
-;; (require-package 'flycheck)
+(require-package 'flycheck)
 ;; (require-package 'flycheck-golangci-lint)
 ;; (require-package 'flycheck-rust)
 ;; (require-package 'doom-modeline)
