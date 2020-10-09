@@ -1207,4 +1207,6 @@ See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
   (pdf-loader-install))
 ;; }}
 
+(setq read-process-output-max (* 2 1024 1024)) ;; 2mb
+
 (provide 'init-misc)

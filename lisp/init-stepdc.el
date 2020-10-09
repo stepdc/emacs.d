@@ -135,32 +135,32 @@
 ;; }}
 
 ;; {{ tabnine
-(with-eval-after-load 'company
-  (require 'company-tabnine)
-  (add-to-list 'company-backends #'company-tabnine)
-  )
+;; (with-eval-after-load 'company
+;;   (require 'company-tabnine)
+;;   (add-to-list 'company-backends #'company-tabnine)
+;;   )
 ;; }}
 
 
 ;; {{ playground
 (exec-path-from-shell-initialize)
-;; (local-require 'nox)
+(local-require 'nox)
 
-;; (dolist (hook (list
-;;                'go-mode-hook
-;;                'js-mode-hook
-;;                'rust-mode-hook
-;;                'python-mode-hook
-;;                'ruby-mode-hook
-;;                'java-mode-hook
-;;                'sh-mode-hook
-;;                'php-mode-hook
-;;                'c-mode-common-hook
-;;                'c-mode-hook
-;;                'c++-mode-hook
-;;                'haskell-mode-hook
-;;                ))
-;;   (add-hook hook '(lambda () (nox-ensure))))
+(dolist (hook (list
+               'go-mode-hook
+               'js-mode-hook
+               'rust-mode-hook
+               'python-mode-hook
+               'ruby-mode-hook
+               'java-mode-hook
+               'sh-mode-hook
+               'php-mode-hook
+               'c-mode-common-hook
+               'c-mode-hook
+               'c++-mode-hook
+               'haskell-mode-hook
+               ))
+  (add-hook hook '(lambda () (nox-ensure))))
 ;; (add-hook 'go-mode-hook 'eglot-ensure)
 
 

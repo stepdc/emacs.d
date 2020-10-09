@@ -108,7 +108,7 @@
     zoutline
     company-c-headers
     ;; company-statistics
-    ;; lsp-mode
+    lsp-mode
     ;; lsp-python-ms
     python
     spinner
