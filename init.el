@@ -7,6 +7,9 @@
   (when (version< emacs-version minver)
     (error "Emacs v%s or higher is required." minver)))
 
+(setq user-init-file (or load-file-name (buffer-file-name)))
+(setq user-emacs-directory (file-name-directory user-init-file))
+
 (defvar best-gc-cons-threshold
   4000000
   "Best default gc threshold value.  Should NOT be too big!")
@@ -32,8 +35,6 @@
 (setq *cygwin* (eq system-type 'cygwin) )
 (setq *linux* (or (eq system-type 'gnu/linux) (eq system-type 'linux)) )
 (setq *unix* (or *linux* (eq system-type 'usg-unix-v) (eq system-type 'berkeley-unix)) )
-(setq *emacs24* (>= emacs-major-version 24))
-(setq *emacs25* (>= emacs-major-version 25))
 (setq *emacs26* (>= emacs-major-version 26))
 (setq *no-memory* (cond
                    (*is-a-mac*
@@ -51,15 +52,14 @@
   "Directory of site-lisp")
 
 (defconst my-lisp-dir (concat my-emacs-d "lisp")
-  "Directory of lisp")
+  "Directory of lisp.")
 
 ;; @see https://www.reddit.com/r/emacs/comments/55ork0/is_emacs_251_noticeably_slower_than_245_on_windows/
 ;; Emacs 25 does gc too frequently
-(when *emacs25*
-  ;; (setq garbage-collection-messages t) ; for debug
-  (setq best-gc-cons-threshold (* 64 1024 1024))
-  (setq gc-cons-percentage 0.5)
-  (run-with-idle-timer 5 t #'garbage-collect))
+;; (setq garbage-collection-messages t) ; for debug
+(setq best-gc-cons-threshold (* 64 1024 1024))
+(setq gc-cons-percentage 0.5)
+(run-with-idle-timer 5 t #'garbage-collect)
 
 (defun my-vc-merge-p ()
   "Use Emacs for git merge only?"
@@ -80,6 +80,18 @@
             (t
              (format "%s/%s/%s" my-site-lisp-dir pkg pkg))))
           t t)))
+
+(defun my-add-subdirs-to-load-path (lisp-dir)
+  "Add sub-directories under LISP-DIR into `load-path'."
+  (let* ((default-directory lisp-dir))
+    (setq load-path
+          (append
+           (delq nil
+                 (mapcar (lambda (dir)
+                           (unless (string-match-p "^\\." dir)
+                             (expand-file-name dir)))
+                         (directory-files my-site-lisp-dir)))
+           load-path))))
 
 ;; @see https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/
 ;; Normally file-name-handler-alist is set to
