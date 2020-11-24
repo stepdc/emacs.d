@@ -109,14 +109,16 @@ If no files marked, always operate on current line in dired-mode."
 
   (defun my-mplayer-subtitle-option (subtitle directory)
     "Return mplayer option from SUBTITLE under DIRECTORY."
-    (let* ((vobsub-p (string-match "\.sub$" subtitle))
-           (opt (if vobsub-p "-vobsub" "-sub"))
-           (basename (file-name-base subtitle)))
-      (format "%s \"%s/%s\""
-              opt
-              directory
-              (if vobsub-p basename
-                (concat basename "." (file-name-extension subtitle))))))
+    (or (when subtitle
+          (let* ((vobsub-p (string-match "\.sub$" subtitle))
+                 (opt (if vobsub-p "-vobsub" "-sub"))
+                 (basename (file-name-base subtitle)))
+            (format "%s \"%s/%s\""
+                    opt
+                    directory
+                    (if vobsub-p basename
+                      (concat basename "." (file-name-extension subtitle))))))
+        ""))
 
   (defun my-detect-subtitle (subtitle &optional search-in-dir)
     "Find SUBTITLE file and return mplayer option.
@@ -206,5 +208,17 @@ If SEARCH-IN-DIR is t, try to find the subtitle by searching in directory."
   ;; @see https://emacs.stackexchange.com/questions/5649/sort-file-names-numbered-in-dired/5650#5650
   (setq dired-listing-switches "-laGh1v")
   (setq dired-recursive-deletes 'always))
+
+(defun my-computer-sleep-now ()
+  "Make my computer sleep now."
+  (interactive)
+  (let* ((cmd (cond
+               (*cygwin*
+                "rundll32.exe PowrProf.dll,SetSuspendState")
+               (*is-a-mac*
+                "pmset sleepnow")
+               (t
+                "sudo pm-suspend"))))
+    (shell-command cmd)))
 
 (provide 'init-dired)
