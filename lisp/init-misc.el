@@ -1133,11 +1133,8 @@ See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
   (pdf-loader-install))
 ;; }}
 
-<<<<<<< HEAD
 (setq read-process-output-max (* 2 1024 1024)) ;; 2mb
 
-||||||| 26ff743c
-=======
 ;; {{ exe path
 (with-eval-after-load 'exec-path-from-shell
   (dolist (var '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO"))
@@ -1149,5 +1146,4 @@ See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
   (my-run-with-idle-timer 4 #'exec-path-from-shell-initialize))
 ;; }}
 
->>>>>>> upstream/master
 (provide 'init-misc)

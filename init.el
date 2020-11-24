@@ -155,20 +155,10 @@
   ;; Adding directories under "site-lisp/" to `load-path' slows
   ;; down all `require' statement. So we do this at the end of startup
   ;; NO ELPA package is dependent on "site-lisp/".
-<<<<<<< HEAD
-  (setq load-path (cdr load-path))
-  (my-add-subdirs-to-load-path (file-name-as-directory my-site-lisp-dir))
-  ;; (require-init 'init-flymake t)
-||||||| 26ff743c
-  (setq load-path (cdr load-path))
-  (my-add-subdirs-to-load-path (file-name-as-directory my-site-lisp-dir))
-  (require-init 'init-flymake t)
-=======
   (unless my-disable-idle-timer
     (my-add-subdirs-to-load-path (file-name-as-directory my-site-lisp-dir)))
 
   (require-init 'init-flymake t)
->>>>>>> upstream/master
 
   (unless (my-vc-merge-p)
     ;; @see https://www.reddit.com/r/emacs/comments/4q4ixw/how_to_forbid_emacs_to_touch_configuration_files/
