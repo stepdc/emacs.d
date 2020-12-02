@@ -158,11 +158,11 @@ This function can be re-used by other major modes after compilation."
   (unless (is-buffer-file-temp)
 
     ;; (unless (featurep 'esup-child)
-      ;; (my-ensure 'lazyflymake)
-      ;; (lazyflymake-start)
+    ;;   (my-ensure 'lazyflymake)
+    ;;   (lazyflymake-start)
 
-      ;; (my-ensure 'wucuo)
-      ;; (wucuo-start))
+    ;;   (my-ensure 'wucuo)
+    ;;   (wucuo-start))
 
     ;; @see http://xugx2007.blogspot.com.au/2007/06/benjamin-rutts-emacs-c-development-tips.html
     (setq compilation-finish-functions
@@ -545,7 +545,7 @@ If no region is selected, `kill-ring' or clipboard is used instead."
 (with-eval-after-load 'auto-save
   (push 'my-file-too-big-p auto-save-exclude)
   (push 'my-check-major-mode-for-auto-save auto-save-exclude)
-  (setq auto-save-idle 2) ; 2 seconds
+  (setq auto-save-idle 14) ; 2 seconds
   (setq auto-save-slient t))
 (my-run-with-idle-timer 4 #'auto-save-enable)
 ;; }}
