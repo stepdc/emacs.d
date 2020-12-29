@@ -301,7 +301,7 @@
 
 ;; (local-require 'vterm)
 ;; (local-require 'vterm-toggle)
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/company-english-helper"))
-(require 'company-english-helper)
+;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/company-english-helper"))
+;; (require 'company-english-helper)
 
 (provide 'init-stepdc)
