@@ -61,7 +61,7 @@
            company-dabbrev-ignore-case nil
            ;; press M-number to choose candidate
            company-show-numbers t
-           company-idle-delay 0
+           company-idle-delay 0.1
            company-echo-delay 0
            company-clang-insert-arguments nil
            company-require-match nil
@@ -144,7 +144,7 @@
 
 ;; {{ playground
 (exec-path-from-shell-initialize)
-(local-require 'nox)
+;; (local-require 'nox)
 
 (dolist (hook (list
                'go-mode-hook
@@ -160,7 +160,8 @@
                'c++-mode-hook
                'haskell-mode-hook
                ))
-  (add-hook hook '(lambda () (nox-ensure))))
+  (add-hook hook '(lambda () (eglot-ensure))))
+  ;;(add-hook hook '(lambda () (nox-ensure))))
 ;; (add-hook 'go-mode-hook 'eglot-ensure)
 
 
@@ -303,5 +304,10 @@
 ;; (local-require 'vterm-toggle)
 ;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/company-english-helper"))
 ;; (require 'company-english-helper)
+
+(eval-after-load "dired" '(progn
+                            (define-key dired-mode-map (kbd "t") 'counsel-fzf)
+                            (define-key dired-mode-map (kbd "b") 'dired-toggle-marks)
+                            ))
 
 (provide 'init-stepdc)

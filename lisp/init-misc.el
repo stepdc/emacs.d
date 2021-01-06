@@ -191,13 +191,15 @@ FN checks these characters belong to normal word characters."
 
   (unless (is-buffer-file-temp)
 
-    ;; (unless (featurep 'esup-child)
-    ;;   (my-ensure 'lazyflymake)
-    ;;   (lazyflymake-start)
+    (unless (featurep 'esup-child)
+      (my-ensure 'lazyflymake)
+      (lazyflymake-start)
 
       ;; (my-ensure 'wucuo)
       ;; (setq-local ispell-extra-args (my-detect-ispell-args t))
-      ;; (wucuo-start))
+      ;; (wucuo-start)
+      )
+
 
     ;; @see http://xugx2007.blogspot.com.au/2007/06/benjamin-rutts-emacs-c-development-tips.html
     (setq compilation-finish-functions

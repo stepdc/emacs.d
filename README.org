@@ -666,12 +666,12 @@ To enable the virtual environment created by Elpy as its official guide has sugg
     (if (file-exists-p venv-dir) (pyvenv-activate venv-dir))))
 #+end_src
 
-After activating the virtual environment created by Elpy, you could also backup its required packages, 
+After activating the virtual environment created by Elpy, you could also backup its required packages,
 #+begin_src sh
 source ~/.emacs.d/elpy/rpc-venv/bin/activate && pip freeze > elpy-requirements.txt && deactivate
 #+end_src
 
-In the future you could restore the packages,
+Then restore the packages,
 #+begin_src sh
 source ~/.emacs.d/elpy/rpc-venv/bin/activate && pip install -r elpy-requirements.txt && deactivate
 #+end_src

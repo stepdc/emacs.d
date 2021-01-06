@@ -126,7 +126,7 @@
     zoutline
     company-c-headers
     ;; company-statistics
-    lsp-mode
+    ;; lsp-mode
     ;; lsp-python-ms
     python
     spinner
@@ -134,10 +134,10 @@
     ;; company-lsp
     plan9-theme
     gotest
-    flycheck
+    ;; flycheck
     ;; flycheck-golangci-lint
-    flycheck-rust
-    emacs-ccls
+    ;; flycheck-rust
+    ;; emacs-ccls
     ;; nox
     doom-modeline
     ;; epubs
