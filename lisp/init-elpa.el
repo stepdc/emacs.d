@@ -374,6 +374,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 ;; (require-package 'flycheck-golangci-lint)
 ;; (require-package 'flycheck-rust)
 ;; (require-package 'doom-modeline)
+;; (require-package 'better-jumpper)
 
 ;; {{ Fixed expiring GNU ELPA keys
 ;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to

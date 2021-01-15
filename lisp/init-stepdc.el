@@ -11,8 +11,11 @@
 (add-hook 'prog-mode-hook
           (lambda ()
             (define-key evil-normal-state-map (kbd "C-]") 'xref-find-definitions)
-            (define-key prog-mode-map (kbd "S-<f6>") 'lsp-rename)
-            (global-set-key (kbd "C-c l") 'my-imenu-or-list-tag-in-current-file)))
+            (define-key prog-mode-map (kbd "S-<f6>") 'eglot-rename)
+            ;; (global-set-key (kbd "C-c l") 'my-imenu-or-list-tag-in-current-file)
+            (global-set-key (kbd "C-c l") 'counsel-imenu)
+            (global-set-key (kbd "C-x o") 'other-window)
+            ))
 
 (global-set-key (kbd "C-c k") 'counsel-rg)
 (global-set-key (kbd "C-c g") 'counsel-git)
@@ -61,7 +64,7 @@
            company-dabbrev-ignore-case nil
            ;; press M-number to choose candidate
            company-show-numbers t
-           company-idle-delay 0.1
+           company-idle-delay 0.007
            company-echo-delay 0
            company-clang-insert-arguments nil
            company-require-match nil
@@ -135,10 +138,10 @@
 ;; }}
 
 ;; {{ tabnine
-;; (with-eval-after-load 'company
-;;   (require 'company-tabnine)
-;;   (add-to-list 'company-backends #'company-tabnine)
-;;   )
+(with-eval-after-load 'company
+  (require 'company-tabnine)
+  (add-to-list 'company-backends #'company-tabnine)
+  )
 ;; }}
 
 
