@@ -15,12 +15,10 @@
      ;; performance
      ;; (setq lsp-enable-file-watchers nil)
      ;; (setq lsp-print-performance t)
-     ;; (setq lsp-idle-delay 0.100)
+     (setq lsp-idle-delay 0.500)
      (setq lsp-completion-provider :capf)
 
      ;; (setq company-lsp-cache-candidates 'auto)
-     ;; (push 'company-lsp company-backends)
-     ;; (setq company-lsp-async t)
      (define-key prog-mode-map (kbd "S-<f6>") 'lsp-rename)))
 
 ;; toggle lsp ui doc
@@ -39,34 +37,6 @@
 (add-hook 'lsp-ui-mode-hook #'my-lsp-ui-mode-hook)
 
 (global-set-key (kbd "S-<f5>") #'toggle-lsp-ui-doc)
-
-;; (eval-after-load 'company-lsp
-;;   '(progn
-;;      (defun company//sort-by-tabnine (candidates)
-;;        (if (or (functionp company-backend)
-;;                (not (and (listp company-backend) (memq 'company-tabnine company-backend))))
-;;            candidates
-;;          (let ((candidates-table (make-hash-table :test #'equal))
-;;                candidates-1
-;;                candidates-2)
-;;            (dolist (candidate candidates)
-;;              (if (eq (get-text-property 0 'company-backend candidate)
-;;                      'company-tabnine)
-;;                  (unless (gethash candidate candidates-table)
-;;                    (push candidate candidates-2))
-;;                (push candidate candidates-1)
-;;                (puthash candidate t candidates-table)))
-;;            (setq candidates-1 (nreverse candidates-1))
-;;            (setq candidates-2 (nreverse candidates-2))
-;;            (nconc (seq-take candidates-1 2)
-;;                   (seq-take candidates-2 2)
-;;                   (seq-drop candidates-1 2)
-;;                   (seq-drop candidates-2 2)))))
-
-;;      (add-to-list 'company-transformers 'company//sort-by-tabnine t)
-;;      ;; `:separate`  使得不同 backend 分开排序
-;;      (add-to-list 'company-backends '(company-lsp :with company-tabnine :separate))
-;;      ))
 
 (add-hook 'prog-mode-hook #'lsp-deferred)
 (add-hook 'rust-mode-hook #'lsp-deferred)

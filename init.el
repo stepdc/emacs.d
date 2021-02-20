@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
 ;; Without this comment emacs25 adds (package-initialize) here
-;; (package-initialize)
+(package-initialize)
 
 (let* ((minver "26.1"))
   (when (version< emacs-version minver)
