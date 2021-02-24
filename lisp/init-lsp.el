@@ -15,10 +15,10 @@
      ;; performance
      ;; (setq lsp-enable-file-watchers nil)
      ;; (setq lsp-print-performance t)
-     (setq lsp-idle-delay 0.500)
+     (setq lsp-idle-delay 1)
      (setq lsp-completion-provider :capf)
+     (setq lsp-log-io nil)
 
-     ;; (setq company-lsp-cache-candidates 'auto)
      (define-key prog-mode-map (kbd "S-<f6>") 'lsp-rename)))
 
 ;; toggle lsp ui doc

@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
 ;; Without this comment emacs25 adds (package-initialize) here
-(package-initialize)
+;; (package-initialize)
 
 (let* ((minver "26.1"))
   (when (version< emacs-version minver)
@@ -180,6 +180,9 @@
 
 (run-with-idle-timer 4 nil #'my-cleanup-gc)
 
+;; theme
+(load-theme 'plan9 t)
+;; (load-theme 'kaolin-mono-light t)
 
 ;;; Local Variables:
 ;;; no-byte-compile: t
