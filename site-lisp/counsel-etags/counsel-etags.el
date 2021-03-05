@@ -80,7 +80,7 @@
 ;;     (setq counsel-etags-extra-tags-files
 ;;           '("./TAGS" "/usr/include/TAGS" "$PROJ1/include/TAGS"))
 ;;
-;;   Files in `counsel-etags-extra-tags-files' have only symbol with absolute path.
+;;   Files in `counsel-etags-extra-tags-files' should have symbols with absolute path only.
 ;;
 ;; - You can set up `counsel-etags-ignore-directories' and `counsel-etags-ignore-filenames',
 ;;   (with-eval-after-load 'counsel-etags
@@ -1277,6 +1277,8 @@ If SHOW-TAGNAME-P is t, show the tag name in minibuffer."
   (let* ((tags-file (counsel-etags-locate-tags-file))
          src-dir)
     (when (and (not tags-file)
+               ;; No need to hint after user set `counsel-etags-extra-tags-files'
+               (not counsel-etags-extra-tags-files)
                (not counsel-etags-can-skip-project-root))
       (setq src-dir (read-directory-name "Ctags will scan code at:"
                                          (counsel-etags-locate-project)))
@@ -1399,7 +1401,7 @@ If SHOW-TAGNAME-P is t, show the tag name in the minibuffer."
                context))
     ;; Dir could be nil. User could use `counsel-etags-extra-tags-files' instead
     (cond
-     ((not dir)
+     ((and (not dir) (not counsel-etags-extra-tags-files))
       (message "Tags file is not ready yet."))
      ((not tagname)
       ;; OK, need use ivy-read to find candidate
@@ -1535,7 +1537,7 @@ That's the known issue of Emacs Lisp.  The program itself is perfectly fine."
          (context (counsel-etags-execute-collect-function)))
     (cond
      (tagname
-        (counsel-etags-find-tag-api tagname nil buffer-file-name context))
+      (counsel-etags-find-tag-api tagname nil buffer-file-name))
      (t
       (message "No tag at point")))))
 
@@ -1718,7 +1720,8 @@ If SHOW-KEYWORD-P is t, show the keyword in the minibuffer."
                   (counsel-etags-read-keyword "Regular expression for grep: ")))
          (keyword (funcall counsel-etags-convert-grep-keyword text))
          (default-directory (file-truename (or root
-                                               (counsel-etags-locate-project))))
+                                               (counsel-etags-locate-project)
+                                               default-directory)))
          (time (current-time))
          (cmd (counsel-etags-grep-cli keyword nil))
          (cands (split-string (shell-command-to-string cmd) "[\r\n]+" t))
