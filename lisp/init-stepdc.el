@@ -18,6 +18,22 @@
             (global-set-key (kbd "C-x o") 'other-window)
             ))
 
+;; evil state color {{
+;; {{ change mode-line color by evil state
+(defconst stepdc-default-color (cons "#98CE8F" "#424242"))
+(defun stepdc-show-evil-state ()
+  "Change mode line color to notify user evil current state."
+  (let* ((color (cond ((minibufferp) stepdc-default-color)
+                      ((evil-insert-state-p) '("#98ece8" . "#424242"))
+                      ((evil-emacs-state-p)  '("#c1e7f8" . "#424242"))
+                      ((buffer-modified-p)   '("#b85c57" . "#ffffff"))
+                      (t stepdc-default-color))))
+    (set-face-background 'mode-line (car color))
+    (set-face-foreground 'mode-line (cdr color))))
+(advice-add 'my-show-evil-state :override #'stepdc-show-evil-state)
+;; }}
+(set-fringe-mode 0)
+
 (global-set-key (kbd "C-c k") 'counsel-rg)
 (global-set-key (kbd "C-c g") 'counsel-git)
 (global-set-key (kbd "M-*") 'pop-tag-mark)
@@ -343,91 +359,46 @@ CURRENT-NAME, if it does not already have them:
 ;; }}
 
 ;; {{epubs
-;; (with-eval-after-load 'shr ; lazy load is very important, it can save you a lot of boot up time
-;;   (require 'shrface)
-;;   (shrface-basic) ; enable shrfaces, must be called before loading eww/dash-docs/nov.el
-;;   (shrface-trial) ; enable shrface experimental face(s), must be called before loading eww/dash-docs/nov.el
-;;   (setq shrface-href-versatile t) ; enable versatile URL faces support
-;;                                         ; (http/https/ftp/file/mailto/other), if
-;;                                         ; `shrface-href-versatile' is nil, default
-;;                                         ; face `shrface-href-face' would be used.
-;;   (setq shrface-toggle-bullets nil) ; Set t if you do not like headline bullets
-
-;;   ;; eww support
-;;   (with-eval-after-load 'eww
-;;     (add-hook 'eww-after-render-hook 'shrface-mode))
-
-;;   ;; nov support
-;;   (with-eval-after-load 'nov
-;;     (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title))) ; reset nov-shr-rendering-functions, in case of the list get bigger and bigger
-;;     (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
-;;     (add-hook 'nov-mode-hook 'shrface-mode)))
-
 ;; nov
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (defun my-nov-setup ()
-   (blink-cursor-mode 0)
+  (blink-cursor-mode 0)
   (face-remap-add-relative 'variable-pitch :family "charter"
                            :height 1.4)
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font)
                       charset (font-spec :family "FZYouSJ VF WT 1")))
+
+  (local-require 'justify-kp)
+  (setq nov-text-width t)
+
+  (defun my-nov-window-configuration-change-hook ()
+    (my-nov-post-html-render-hook)
+    (remove-hook 'window-configuration-change-hook
+                 'my-nov-window-configuration-change-hook
+                 t))
+
+  (defun my-nov-post-html-render-hook ()
+    (if (get-buffer-window)
+        (let ((max-width (pj-line-width))
+              buffer-read-only)
+          (save-excursion
+            (goto-char (point-min))
+            (while (not (eobp))
+              (when (not (looking-at "^[[:space:]]*$"))
+                (goto-char (line-end-position))
+                (when (> (shr-pixel-column) max-width)
+                  (goto-char (line-beginning-position))
+                  (pj-justify)))
+              (forward-line 1))))
+      (add-hook 'window-configuration-change-hook
+                'my-nov-window-configuration-change-hook
+                nil t)))
+
+  (add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook)
+
   )
 (add-hook 'nov-mode-hook 'my-nov-setup)
-
-;; {{ shrface related
-;; (with-eval-after-load 'shr ; lazy load is very important, it can save you a lot of boot up time
-;;   (require 'shrface)
-;;   (shrface-basic) ; enable shrfaces, must be called before loading eww/dash-docs/nov.el
-;;   (shrface-trial) ; enable shrface experimental face(s), must be called before loading eww/dash-docs/nov.el
-;;   (setq shrface-href-versatile t) ; enable versatile URL faces support
-;;                                   ; (http/https/ftp/file/mailto/other), if
-;;                                   ; `shrface-href-versatile' is nil, default
-;;                                   ; face `shrface-href-face' would be used.
-;;   (setq shrface-toggle-bullets nil) ; Set t if you do not like headline bullets
-
-;;   ;; eww support
-;;   (with-eval-after-load 'eww
-;;     (add-hook 'eww-after-render-hook 'shrface-mode))
-
-;;   ;; nov support
-;;   (with-eval-after-load 'nov
-;;     (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title))) ; reset nov-shr-rendering-functions, in case of the list get bigger and bigger
-;;     (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
-;;     (add-hook 'nov-mode-hook 'shrface-mode))
-
-;;   ;; mu4e support
-;;   (with-eval-after-load 'mu4e
-;;     (add-hook 'mu4e-view-mode-hook 'shrface-mode)))
-;; }} shrface ends here
-
-(local-require 'justify-kp)
-(setq nov-text-width t)
-
-(defun my-nov-window-configuration-change-hook ()
-  (my-nov-post-html-render-hook)
-  (remove-hook 'window-configuration-change-hook
-               'my-nov-window-configuration-change-hook
-               t))
-
-(defun my-nov-post-html-render-hook ()
-  (if (get-buffer-window)
-      (let ((max-width (pj-line-width))
-            buffer-read-only)
-        (save-excursion
-          (goto-char (point-min))
-          (while (not (eobp))
-            (when (not (looking-at "^[[:space:]]*$"))
-              (goto-char (line-end-position))
-              (when (> (shr-pixel-column) max-width)
-                (goto-char (line-beginning-position))
-                (pj-justify)))
-            (forward-line 1))))
-    (add-hook 'window-configuration-change-hook
-              'my-nov-window-configuration-change-hook
-              nil t)))
-
-(add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook)
 
 ;; stop cursor blink in nov mode
 ;; (define-global-minor-mode my-global-cursor-mode blink-cursor-mode
