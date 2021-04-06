@@ -39,10 +39,6 @@
       undo-strong-limit 8000000
       undo-outer-limit 8000000)
 
-(defvar my-use-m-for-matchit nil
-  "If t, use \"m\" key for `evil-matchit-mode'.
-And \"%\" key is also restored to `evil-jump-item'.")
-
 ;; {{ @see https://github.com/timcharper/evil-surround for tutorial
 (my-run-with-idle-timer 2 #'global-evil-surround-mode)
 (with-eval-after-load 'evil-surround
@@ -62,7 +58,8 @@ And \"%\" key is also restored to `evil-jump-item'.")
       (push '(?\( . ("( " . ")")) evil-surround-pairs-alist)
       (push '(?` . ("`" . "'")) evil-surround-pairs-alist))
 
-    (when (derived-mode-p 'js-mode)
+    (when (or (derived-mode-p 'js-mode)
+              (memq major-mode '(typescript-mode web-mode)))
       (push '(?j . ("JSON.stringify(" . ")")) evil-surround-pairs-alist)
       (push '(?> . ("(e) => " . "(e)")) evil-surround-pairs-alist))
 
@@ -606,7 +603,7 @@ If N > 0, only occurrences in current N lines are renamed."
   ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
   "tm" 'my-git-timemachine
   ;; toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
-  "op" 'compile
+  "op" 'my-compile
   "c$" 'org-archive-subtree ; `C-c $'
   ;; org-do-demote/org-do-premote support selected region
   "c<" 'org-do-promote ; `C-c C-<'
@@ -642,7 +639,7 @@ If N > 0, only occurrences in current N lines are renamed."
   "sd" 'split-window-horizontally
   "oo" 'delete-other-windows
   ;; }}
-  "xr" 'rotate-windows
+  "xr" 'my-rotate-windows
   "xt" 'toggle-two-split-window
   "uu" 'my-transient-winner-undo
   "fs" 'ffip-save-ivy-last
@@ -831,6 +828,8 @@ If N > 0, only occurrences in current N lines are renamed."
 ;; {{ evil-nerd-commenter
 (my-run-with-idle-timer 2 #'evilnc-default-hotkeys)
 (define-key evil-motion-state-map "gc" 'evilnc-comment-operator) ; same as doom-emacs
+(define-key evil-motion-state-map "gb" 'evilnc-copy-and-comment-operator)
+(define-key evil-motion-state-map "gy" 'evilnc-yank-and-comment-operator)
 
 (defun my-current-line-html-p (paragraph-region)
   "Is current line html?"
@@ -942,67 +941,11 @@ If N > 0, only occurrences in current N lines are renamed."
   ;; Here is the workaround
   (setq evil-default-cursor t))
 
-;; stepdc custom bindings
-(define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
-
-;; more bindings
-(define-key evil-normal-state-map (kbd "SPC w") 'save-buffer)
-(define-key evil-normal-state-map (kbd "SPC t") 'counsel-fzf)
-;; (define-key evil-normal-state-map (kbd "SPC t") 'ffip)
-(define-key evil-normal-state-map (kbd "SPC n") 'ivy-switch-buffer)
-(define-key evil-normal-state-map (kbd "C-k") (lambda () (interactive) (previous-line 3)))
-(define-key evil-normal-state-map (kbd "C-j") (lambda () (interactive) (next-line 3)))
-(define-key evil-normal-state-map (kbd "K") (lambda () (interactive) (backward-paragraph)))
-(define-key evil-normal-state-map (kbd "J") (lambda () (interactive) (forward-paragraph)))
-(define-key evil-normal-state-map (kbd "C-l") (lambda () (interactive) (recenter-top-bottom) (evil-ex-nohighlight)))
-
-;; c-w
-(defun prelude-move-beginning-of-line (arg)
-  "Move point back to indentation of beginning of line.
-
-Move point to the first non-whitespace character on this line.
-If point is already there, move to the beginning of the line.
-Effectively toggle between the first non-whitespace character and
-the beginning of the line.
-
-If ARG is not nil or 1, move forward ARG - 1 lines first. If
-point reaches the beginning or end of the buffer, stop there."
-  (interactive "^p")
-  (setq arg (or arg 1))
-
-  ;; Move lines first
-  (when (/= arg 1)
-    (let ((line-move-visual nil))
-      (forward-line (1- arg))))
-
-  (let ((orig-point (point)))
-    (back-to-indentation)
-    (when (= orig-point (point))
-      (move-beginning-of-line 1))))
-
-;; C-a
-(define-key evil-insert-state-map (kbd "C-a") 'prelude-move-beginning-of-line)
-
-;; global
-(global-set-key (kbd "C-c r") 'my-counsel-recentf)
-
-(defun evil-normalize-all-buffers ()
-  "Force a drop to normal state."
-  (unless (eq evil-state 'normal)
-    (dolist (buffer (buffer-list))
-      (set-buffer buffer)
-      (unless (or (minibufferp)
-                  (eq evil-state 'emacs))
-        (evil-force-normal-state)))
-    (message "Dropped back to normal state in all buffers")))
-
-(defvar evil-normal-timer
-  (run-with-idle-timer 30 t #'evil-normalize-all-buffers)
-  "Drop back to normal state after idle for 15 seconds.")
-
-;; hooks
-;; (add-hook 'focus-in-hook
-;;      #'evil-normal-state)
-(add-hook 'prog-mode-hook #'hs-minor-mode)
+(with-eval-after-load 'web-mode
+  (mapc #'evil-declare-change-repeat
+        '(web-mode-element-rename))
+  ;; (mapc #'evil-declare-repeat
+  ;;       '(web-mode-element-rename))
+  )
 
 (provide 'init-evil)

@@ -37,6 +37,8 @@
     racket-mode
     auto-package-update
     web-mode
+    kv
+    esxml ; nov is dependent on latest esxml
     nov
     bbdb
     esup ; Emacs start up profiler
@@ -47,6 +49,7 @@
     highlight-symbol
     undo-fu
     command-log-mode
+    evil ; @see https://github.com/emacs-evil/evil/commit/19cc5f8eef8bfffdec8082b604c7129782acb332
     ;; lsp-mode ; stable version has performance issue, but unstable version sends too many warnings
     vimrc-mode
     rjsx-mode ; fixed the indent issue in jsx
@@ -276,7 +279,6 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'nvm)
 (require-package 'writeroom-mode)
 (require-package 'haml-mode)
-(require-package 'scss-mode)
 (require-package 'markdown-mode)
 (require-package 'link)
 (require-package 'connection)
