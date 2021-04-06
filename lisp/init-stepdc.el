@@ -327,7 +327,7 @@ CURRENT-NAME, if it does not already have them:
 
 ;; {{ rust
 ;; (add-auto-mode 'rust-mode "\\.rs\\'")
-;; (setq rust-format-on-save t)
+(setq rust-format-on-save t)
 ;; }}
 
 ;; {{ bing dict

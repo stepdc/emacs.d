@@ -181,8 +181,9 @@
 (run-with-idle-timer 4 nil #'my-cleanup-gc)
 
 ;; theme
-(load-theme 'plan9 t)
-;; (load-theme 'kaolin-mono-light t)
+;; (load-theme 'plan9 t)
+;; (load-theme 'tao-yang t)
+(load-theme 'modus-operandi t)
 
 ;;; Local Variables:
 ;;; no-byte-compile: t
