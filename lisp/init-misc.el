@@ -22,7 +22,7 @@
 (setq org2nikola-use-verbose-metadata t) ; for nikola 7.7+
 ;; }}
 
-(define-key global-map (kbd "RET") 'newline-and-indent)
+;; (define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; {{ isearch
 ;; Use regex to search by default
@@ -199,11 +199,6 @@ FN checks these characters belong to normal word characters."
       (unless my-disable-lazyflymake
         (my-ensure 'lazyflymake)
         (lazyflymake-start))
-
-      ;; (my-ensure 'wucuo)
-      ;; (setq-local ispell-extra-args (my-detect-ispell-args t))
-      ;; (wucuo-start)
-      )
 
       (unless my-disable-wucuo
         (my-ensure 'wucuo)

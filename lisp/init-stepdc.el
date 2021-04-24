@@ -4,7 +4,7 @@
 
 ;; evil edit status settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Customized functions                ;;
+;; Customized functions               ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 
@@ -99,6 +99,19 @@
      (add-to-list 'company-backends 'company-files)
      (setq company-minimum-prefix-length 1) ; pop up a completion menu by tapping a character
 
+     (define-key company-active-map (kbd "TAB") #'company-complete-common-or-cycle)
+     (define-key company-active-map (kbd "<tab>") #'company-complete-common-or-cycle)
+     (define-key company-active-map (kbd "<backtab>") #'company-select-previous)
+     (define-key company-active-map (kbd "S-TAB") #'company-select-previous)
+
+     ;; Use the tab-and-go frontend.
+     ;; Allows TAB to select and complete at the same time.
+     (company-tng-configure-default)
+     (setq company-frontends
+           '(company-tng-frontend
+             company-pseudo-tooltip-frontend
+             company-echo-metadata-frontend))
+
      (define-key company-active-map (kbd "C-j") #'company-select-next)
      (define-key company-active-map (kbd "C-k") #'company-select-previous)
      (define-key company-active-map (kbd "C-l") #'company-complete-selection)
@@ -106,203 +119,33 @@
      (define-key company-active-map (kbd "C-p") #'company-select-previous)
      (define-key company-active-map (kbd "C-f") #'company-complete-selection)
      (define-key company-active-map (kbd "C-w") #'kill-region)
-     (define-key company-active-map (kbd "TAB") #'company-complete-common-or-cycle)
-     (define-key company-active-map (kbd "<tab>") #'company-complete-common-or-cycle)
-     (define-key company-active-map (kbd "<backtab>") #'company-select-previous)
-     (define-key company-active-map (kbd "S-TAB") #'company-select-previous)
+     (define-key company-active-map (kbd "C-h") #'company-complete-selection)
+     (define-key company-active-map (kbd "<return>") #'company-complete-selection)
+     (define-key company-active-map (kbd "RET") #'company-complete-selection)
 
-     ;; (defadvice company-echo-show (around disable-tabnine-upgrade-message activate)
-     ;;   (let ((company-message-func (ad-get-arg 0)))
-     ;;     (when (and company-message-func
-     ;;                (stringp (funcall company-message-func)))
-     ;;       (unless (string-match "The free version of TabNine only indexes up to" (funcall company-message-func))
-     ;;         ad-do-it))))
+     ;; Add yasnippet support for all company backends.
+     (defvar company-mode/enable-yas t
+       "Enable yasnippet for all backends.")
 
-     ;; workaround for company-transformers
-     ;; (setq company-tabnine--disable-next-transform nil)
-     ;; (defun my-company--transform-candidates (func &rest args)
-     ;;   (if (not company-tabnine--disable-next-transform)
-     ;;       (apply func args)
-     ;;     (setq company-tabnine--disable-next-transform nil)
-     ;;     (car args)))
+     (defun company-mode/backend-with-yas (backend)
+       (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+           backend
+         (append (if (consp backend) backend (list backend))
+                 '(:with company-yasnippet))))
 
-     ;; (defun my-company-tabnine (func &rest args)
-     ;;   (when (eq (car args) 'candidates)
-     ;;     (setq company-tabnine--disable-next-transform t))
-     ;;   (apply func args))
-
-     ;; (advice-add #'company--transform-candidates :around #'my-company--transform-candidates)
-     ;; (advice-add #'company-tabnine :around #'my-company-tabnine)
-
-     ;; (add-to-list 'company-backends #'company-tabnine)
+     (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
      ))
 
-;; {{ mode-line
-;; (require 'doom-modeline)
-;; (doom-modeline-mode 1)
-;; }}
-
-;; {{ ctags
-
-;; (local-require 'counsel-etags)
-;; (defun my-setup-develop-environment ()
-;;   "Set up my develop environment."
-;;   (interactive)
-;;   (unless (is-buffer-file-temp)
-;;     (add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)))
-;; (add-hook 'prog-mode-hook 'my-setup-develop-environment)
-
-;; }}
-
 ;; {{ tabnine
-;; (with-eval-after-load 'company
-;;   (require 'company-tabnine)
-;;   (add-to-list 'company-backends #'company-tabnine)
-;;   )
-
-;; (with-eval-after-load 'company
-;;   (dolist (mode (list
-;;                  'c-mode-common
-;;                  'c-mode
-;;                  'emacs-lisp-mode
-;;                  'lisp-interaction-mode
-;;                  'lisp-mode
-;;                  'java-mode
-;;                  'asm-mode
-;;                  'haskell-mode
-;;                  'sh-mode
-;;                  'makefile-gmake-mode
-;;                  'python-mode
-;;                  'js-mode
-;;                  'html-mode
-;;                  'css-mode
-;;                  'tuareg-mode
-;;                  'go-mode
-;;                  'coffee-mode
-;;                  'qml-mode
-;;                  'slime-repl-mode
-;;                  'package-menu-mode
-;;                  'cmake-mode
-;;                  'php-mode
-;;                  'web-mode
-;;                  'coffee-mode
-;;                  'sws-mode
-;;                  'jade-mode
-;;                  'vala-mode
-;;                  'rust-mode
-;;                  'ruby-mode
-;;                  'qmake-mode
-;;                  'lua-mode
-;;                  'swift-mode
-;;                  'llvm-mode
-;;                  'conf-toml-mode
-;;                  'nxml-mode
-;;                ))
-;;   (with-eval-after-load mode
-;;     (add-to-list 'company-backends #'company-tabnine))))
-  ;; ( with-eval-after-load mode
-  ;;   (setq +lsp-company-backends '(company-tabnine company-capf)))
-  ;;   ))
-
-(defun make-obsolete (obsolete-name current-name &optional when)
-  "Make the byte-compiler warn that function OBSOLETE-NAME is obsolete.
-OBSOLETE-NAME should be a function name or macro name (a symbol).
-
-The warning will say that CURRENT-NAME should be used instead.
-If CURRENT-NAME is a string, that is the `use instead' message
-\(it should end with a period, and not start with a capital).
-WHEN should be a string indicating when the function
-was first made obsolete, for example a date or a release number."
-  (declare (advertised-calling-convention
-            ;; New code should always provide the `when' argument.
-            (obsolete-name current-name when) "23.1"))
-  (put obsolete-name 'byte-obsolete-info
-       ;; The second entry used to hold the `byte-compile' handler, but
-       ;; is not used any more nowadays.
-       (purecopy (list current-name nil when)))
-  obsolete-name)
-
-(defmacro define-obsolete-function-alias (obsolete-name current-name
-                                                        &optional when docstring)
-  "Set OBSOLETE-NAME's function definition to CURRENT-NAME and mark it obsolete.
-
-\(define-obsolete-function-alias \\='old-fun \\='new-fun \"22.1\" \"old-fun's doc.\")
-
-is equivalent to the following two lines of code:
-
-\(defalias \\='old-fun \\='new-fun \"old-fun's doc.\")
-\(make-obsolete \\='old-fun \\='new-fun \"22.1\")
-
-WHEN should be a string indicating when the function was first
-made obsolete, for example a date or a release number.
-
-See the docstrings of `defalias' and `make-obsolete' for more details."
-  (declare (doc-string 4)
-           (advertised-calling-convention
-            ;; New code should always provide the `when' argument.
-            (obsolete-name current-name when &optional docstring) "23.1"))
-  `(progn
-     (defalias ,obsolete-name ,current-name ,docstring)
-     (make-obsolete ,obsolete-name ,current-name ,when)))
-
-(defun make-obsolete-variable (obsolete-name current-name &optional when access-type)
-  "Make the byte-compiler warn that OBSOLETE-NAME is obsolete.
-The warning will say that CURRENT-NAME should be used instead.
-If CURRENT-NAME is a string, that is the `use instead' message.
-WHEN should be a string indicating when the variable
-was first made obsolete, for example a date or a release number.
-ACCESS-TYPE if non-nil should specify the kind of access that will trigger
-  obsolescence warnings; it can be either `get' or `set'."
-  (declare (advertised-calling-convention
-            ;; New code should always provide the `when' argument.
-            (obsolete-name current-name when &optional access-type) "23.1"))
-  (put obsolete-name 'byte-obsolete-variable
-       (purecopy (list current-name access-type when)))
-  obsolete-name)
-
-(defmacro define-obsolete-variable-alias (obsolete-name current-name
-              &optional when docstring)
-  "Make OBSOLETE-NAME a variable alias for CURRENT-NAME and mark it obsolete.
-This uses `defvaralias' and `make-obsolete-variable' (which see).
-See the Info node `(elisp)Variable Aliases' for more details.
-
-If CURRENT-NAME is a defcustom or a defvar (more generally, any variable
-where OBSOLETE-NAME may be set, e.g. in an init file, before the
-alias is defined), then the define-obsolete-variable-alias
-statement should be evaluated before the defcustom, if user
-customizations are to be respected.  The simplest way to achieve
-this is to place the alias statement before the defcustom (this
-is not necessary for aliases that are autoloaded, or in files
-dumped with Emacs).  This is so that any user customizations are
-applied before the defcustom tries to initialize the
-variable (this is due to the way `defvaralias' works).
-
-WHEN should be a string indicating when the variable was first
-made obsolete, for example a date or a release number.
-
-For the benefit of Customize, if OBSOLETE-NAME has
-any of the following properties, they are copied to
-CURRENT-NAME, if it does not already have them:
-`saved-value', `saved-variable-comment'."
-  (declare (doc-string 4)
-           (advertised-calling-convention
-            ;; New code should always provide the `when' argument.
-            (obsolete-name current-name when &optional docstring) "23.1"))
-  `(progn
-     (defvaralias ,obsolete-name ,current-name ,docstring)
-     ;; See Bug#4706.
-     (dolist (prop '(saved-value saved-variable-comment))
-       (and (get ,obsolete-name prop)
-            (null (get ,current-name prop))
-            (put ,current-name prop (get ,obsolete-name prop))))
-     (make-obsolete-variable ,obsolete-name ,current-name ,when)))
+(with-eval-after-load 'company
+  (require 'company-tabnine)
+  (add-to-list 'company-backends #'company-tabnine))
 
 ;; }}
-
 
 ;; {{ playground
 (exec-path-from-shell-initialize)
-;; (local-require 'nox)
+(local-require 'nox)
 
 (dolist (hook (list
                'go-mode-hook
@@ -318,8 +161,8 @@ CURRENT-NAME, if it does not already have them:
                'c++-mode-hook
                'haskell-mode-hook
                ))
-  (add-hook hook '(lambda () (eglot-ensure))))
-  ;;(add-hook hook '(lambda () (nox-ensure))))
+  ;; (add-hook hook '(lambda () (eglot-ensure))))
+  (add-hook hook '(lambda () (nox-ensure))))
 ;; (add-hook 'go-mode-hook 'eglot-ensure)
 
 
@@ -356,6 +199,7 @@ CURRENT-NAME, if it does not already have them:
 (setq bing-dict-vocabulary-save t)
 (setq bing-dict-cache-auto-save t)
 
+(setq my-disable-wucuo t)
 ;; }}
 
 ;; {{epubs
@@ -435,7 +279,6 @@ CURRENT-NAME, if it does not already have them:
 
 ;; Set default font
 (my-run-with-idle-timer 1 #'stepdc-gui-font-config)
-
 
 ;; evil
 
