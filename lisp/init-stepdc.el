@@ -11,8 +11,10 @@
 (add-hook 'prog-mode-hook
           (lambda ()
             (define-key evil-normal-state-map (kbd "C-]") 'xref-find-definitions)
-            (define-key prog-mode-map (kbd "S-<f6>") 'eglot-rename)
-            (define-key prog-mode-map (kbd "S-<f5>") 'eglot)
+            ;; (define-key prog-mode-map (kbd "S-<f6>") 'eglot-rename)
+            ;; (define-key prog-mode-map (kbd "S-<f5>") 'eglot)
+            (define-key prog-mode-map (kbd "S-<f6>") 'nox-rename)
+            (define-key prog-mode-map (kbd "S-<f5>") 'nox)
             ;; (global-set-key (kbd "C-c l") 'my-imenu-or-list-tag-in-current-file)
             (global-set-key (kbd "C-c l") 'counsel-imenu)
             (global-set-key (kbd "C-x o") 'other-window)
@@ -106,11 +108,11 @@
 
      ;; Use the tab-and-go frontend.
      ;; Allows TAB to select and complete at the same time.
-     (company-tng-configure-default)
-     (setq company-frontends
-           '(company-tng-frontend
-             company-pseudo-tooltip-frontend
-             company-echo-metadata-frontend))
+     ;; (company-tng-configure-default)
+     ;; (setq company-frontends
+     ;;       '(company-tng-frontend
+     ;;         company-pseudo-tooltip-frontend
+     ;;         company-echo-metadata-frontend))
 
      (define-key company-active-map (kbd "C-j") #'company-select-next)
      (define-key company-active-map (kbd "C-k") #'company-select-previous)
@@ -120,8 +122,8 @@
      (define-key company-active-map (kbd "C-f") #'company-complete-selection)
      (define-key company-active-map (kbd "C-w") #'kill-region)
      (define-key company-active-map (kbd "C-h") #'company-complete-selection)
-     (define-key company-active-map (kbd "<return>") #'company-complete-selection)
-     (define-key company-active-map (kbd "RET") #'company-complete-selection)
+     ;; (define-key company-active-map (kbd "<return>") #'company-complete-selection)
+     ;; (define-key company-active-map (kbd "RET") #'company-complete-selection)
 
      ;; Add yasnippet support for all company backends.
      (defvar company-mode/enable-yas t
@@ -137,9 +139,9 @@
      ))
 
 ;; {{ tabnine
-(with-eval-after-load 'company
-  (require 'company-tabnine)
-  (add-to-list 'company-backends #'company-tabnine))
+;; (with-eval-after-load 'company
+;;   (require 'company-tabnine)
+;;   (add-to-list 'company-backends #'company-tabnine))
 
 ;; }}
 
@@ -163,8 +165,10 @@
                ))
   ;; (add-hook hook '(lambda () (eglot-ensure))))
   (add-hook hook '(lambda () (nox-ensure))))
-;; (add-hook 'go-mode-hook 'eglot-ensure)
 
+;; use flymake gostatic check
+;; (local-require 'flymake-go-staticcheck)
+;; (add-hook 'go-mode-hook #'flymake-go-staticcheck-enable)
 
 ;; }}
 
