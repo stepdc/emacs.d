@@ -340,9 +340,7 @@ point reaches the beginning or end of the buffer, stop there."
         (evil-force-normal-state)))
     (message "Dropped back to normal state in all buffers")))
 
-(defvar evil-normal-timer
-  (run-with-idle-timer 30 t #'evil-normalize-all-buffers)
-  "Drop back to normal state after idle for 15 seconds.")
+(my-run-with-idle-timer 20 #'evil-normalize-all-buffers)
 
 ;; hooks
 ;; (add-hook 'focus-in-hook
