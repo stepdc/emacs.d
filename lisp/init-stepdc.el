@@ -11,10 +11,12 @@
 (add-hook 'prog-mode-hook
           (lambda ()
             (define-key evil-normal-state-map (kbd "C-]") 'xref-find-definitions)
-            ;; (define-key prog-mode-map (kbd "S-<f6>") 'eglot-rename)
-            ;; (define-key prog-mode-map (kbd "S-<f5>") 'eglot)
-            (define-key prog-mode-map (kbd "S-<f6>") 'nox-rename)
-            (define-key prog-mode-map (kbd "S-<f5>") 'nox)
+            (define-key prog-mode-map (kbd "S-<f6>") 'eglot-rename)
+            (define-key prog-mode-map (kbd "S-<f5>") 'eglot)
+            ;; (define-key prog-mode-map (kbd "S-<f6>") 'nox-rename)
+            ;; (define-key prog-mode-map (kbd "S-<f5>") 'nox)
+            ;; (define-key prog-mode-map (kbd "S-<f6>") 'lsp-rename)
+            ;; (define-key prog-mode-map (kbd "S-<f5>") 'lsp)
             ;; (global-set-key (kbd "C-c l") 'my-imenu-or-list-tag-in-current-file)
             (global-set-key (kbd "C-c l") 'counsel-imenu)
             (global-set-key (kbd "C-x o") 'other-window)
@@ -49,8 +51,8 @@
      (list (save-excursion (backward-word 1) (point)) (point)))))
 
 ;; toggle-eshell
-(local-require 'eshell-toggle)
-(global-set-key (kbd "M-t") 'eshell-toggle)
+;; (local-require 'eshell-toggle)
+;; (global-set-key (kbd "M-t") 'eshell-toggle)
 
 (when *is-a-mac*
   (set-face-attribute 'default nil :height 150))
@@ -83,7 +85,8 @@
            company-dabbrev-ignore-case nil
            ;; press M-number to choose candidate
            company-show-numbers t
-           company-idle-delay 0.007
+           ;;company-idle-delay 0.007
+           company-idle-delay 0.05
            company-echo-delay 0
            company-clang-insert-arguments nil
            company-require-match nil
@@ -147,7 +150,7 @@
 
 ;; {{ playground
 (exec-path-from-shell-initialize)
-(local-require 'nox)
+;; (local-require 'nox)
 
 (dolist (hook (list
                'go-mode-hook
@@ -163,8 +166,8 @@
                'c++-mode-hook
                'haskell-mode-hook
                ))
-  ;; (add-hook hook '(lambda () (eglot-ensure))))
-  (add-hook hook '(lambda () (nox-ensure))))
+  (add-hook hook '(lambda () (eglot-ensure))))
+  ;; (add-hook hook '(lambda () (nox-ensure))))
 
 ;; use flymake gostatic check
 ;; (local-require 'flymake-go-staticcheck)
@@ -173,8 +176,14 @@
 ;; }}
 
 ;; {{ rust
-;; (add-auto-mode 'rust-mode "\\.rs\\'")
-(setq rust-format-on-save t)
+(defun my-rust-setup ()
+  ;; (setq rust-format-on-save t)
+  (setq indent-tabs-mode nil)
+
+  (define-key rust-mode-map (kbd "C-c t f") 'rust-test)
+  (define-key rust-mode-map (kbd "C-c t x") 'rust-run))
+
+(add-hook 'rust-mode-hook 'my-rust-setup)
 ;; }}
 
 ;; {{ bing dict
@@ -346,5 +355,11 @@ point reaches the beginning or end of the buffer, stop there."
 ;; (add-hook 'focus-in-hook
 ;;      #'evil-normal-state)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
+
+(defun my-git-pos-and-state ()
+  (goto-char 0)
+  (evil-insert-state))
+
+(add-hook 'git-commit-mode-hook 'my-git-pos-and-state)
 
 (provide 'init-stepdc)

@@ -147,7 +147,7 @@
   (require-init 'init-stepdc)
   ;; (require-init 'init-lsp)
   (require-init 'init-golang)
-  (require-init 'init-flycheck)
+  ;; (require-init 'init-flycheck)
 
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ
