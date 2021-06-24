@@ -85,12 +85,13 @@
            company-dabbrev-ignore-case nil
            ;; press M-number to choose candidate
            company-show-numbers t
-           ;;company-idle-delay 0.007
-           company-idle-delay 0.05
+           company-idle-delay 0.0083
+           ;; company-idle-delay 0.05
            company-echo-delay 0
            company-clang-insert-arguments nil
            company-require-match nil
-           company-ctags-ignore-case t ; I use company-ctags instead
+           company-ctags-ignore-case nil ; I use company-ctags instead
+           ;; company-ctags-fuzzy-match-p t
            ;; @see https://github.com/company-mode/company-mode/issues/146
            company-tooltip-align-annotations t)
 
@@ -141,6 +142,8 @@
      (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
      ))
 
+;; (company-prescient-mode 1)
+
 ;; {{ tabnine
 ;; (with-eval-after-load 'company
 ;;   (require 'company-tabnine)
@@ -168,6 +171,7 @@
                ))
   (add-hook hook '(lambda () (eglot-ensure))))
   ;; (add-hook hook '(lambda () (nox-ensure))))
+(setq eglot-ignored-server-capabilites '(:documentHighlightProvider))
 
 ;; use flymake gostatic check
 ;; (local-require 'flymake-go-staticcheck)
@@ -177,7 +181,7 @@
 
 ;; {{ rust
 (defun my-rust-setup ()
-  ;; (setq rust-format-on-save t)
+  (setq rust-format-on-save t)
   (setq indent-tabs-mode nil)
 
   (define-key rust-mode-map (kbd "C-c t f") 'rust-test)
@@ -283,12 +287,18 @@
 (local-require 'two-firewatch-light-theme)
 
 (defun stepdc-gui-font-config ()
-  "set font to insconsolata"
+  ;; "set font to insconsolata"
+  ;; (set-face-attribute 'default nil
+  ;;                   :family "InconsolataGo"
+  ;;                   :height 120
+  ;;                   :weight 'normal
+  ;;                   :width 'normal)
   (set-face-attribute 'default nil
-                    :family "InconsolataGo"
-                    :height 120
+                    :family "menlo"
+                    :height 100
                     :weight 'normal
-                    :width 'normal))
+                    :width 'normal)
+  )
 
 ;; Set default font
 (my-run-with-idle-timer 1 #'stepdc-gui-font-config)

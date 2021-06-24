@@ -57,8 +57,8 @@ In that case, insert the number."
   (setq company-auto-commit-chars '(92  41 46 44 59))
 
   ;; company-ctags is much faster out of box. No further optimiation needed
-  ;; (unless (featurep 'company-ctags) (local-require 'company-ctags))
-  ;; (company-ctags-auto-setup)
+  (unless (featurep 'company-ctags) (local-require 'company-ctags))
+  (company-ctags-auto-setup)
 
   ;; (setq company-backends (delete 'company-capf company-backends))
 
