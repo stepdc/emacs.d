@@ -129,6 +129,8 @@
      ;; (define-key company-active-map (kbd "<return>") #'company-complete-selection)
      ;; (define-key company-active-map (kbd "RET") #'company-complete-selection)
 
+     ;; (add-to-list 'company-transformers #'delete-dups)
+
      ;; Add yasnippet support for all company backends.
      (defvar company-mode/enable-yas t
        "Enable yasnippet for all backends.")
@@ -148,6 +150,26 @@
 ;; (with-eval-after-load 'company
 ;;   (require 'company-tabnine)
 ;;   (add-to-list 'company-backends #'company-tabnine))
+
+;; }}
+
+;; {{ ctags
+
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (add-to-list 'load-path "~/.emacs.d/site-lisp/citre")
+            (require 'citre)
+            (add-hook 'find-file-hook #'citre-auto-enable-citre-mode)
+            ;; (require 'citre-config)
+            (autoload 'citre-update-tags-file "citre")
+            (autoload 'citre-update-this-tags-file "citre")
+            (autoload 'citre-edit-tags-file-recipe "citre")
+            (autoload 'citre-create-tags-file "citre")
+            (autoload 'citre-mode "citre")
+            (autoload 'citre-peek "citre")
+            (autoload 'citre-ace-peek "citre")
+            (autoload 'citre-auto-enable-citre-mode "citre")
+            ))
 
 ;; }}
 
