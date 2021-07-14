@@ -155,21 +155,21 @@
 
 ;; {{ ctags
 
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (add-to-list 'load-path "~/.emacs.d/site-lisp/citre")
-            (require 'citre)
-            (add-hook 'find-file-hook #'citre-auto-enable-citre-mode)
-            ;; (require 'citre-config)
-            (autoload 'citre-update-tags-file "citre")
-            (autoload 'citre-update-this-tags-file "citre")
-            (autoload 'citre-edit-tags-file-recipe "citre")
-            (autoload 'citre-create-tags-file "citre")
-            (autoload 'citre-mode "citre")
-            (autoload 'citre-peek "citre")
-            (autoload 'citre-ace-peek "citre")
-            (autoload 'citre-auto-enable-citre-mode "citre")
-            ))
+;; (add-hook 'prog-mode-hook
+;;           (lambda ()
+;;             (add-to-list 'load-path "~/.emacs.d/site-lisp/citre")
+;;             (require 'citre)
+;;             (add-hook 'find-file-hook #'citre-auto-enable-citre-mode)
+;;             ;; (require 'citre-config)
+;;             (autoload 'citre-update-tags-file "citre")
+;;             (autoload 'citre-update-this-tags-file "citre")
+;;             (autoload 'citre-edit-tags-file-recipe "citre")
+;;             (autoload 'citre-create-tags-file "citre")
+;;             (autoload 'citre-mode "citre")
+;;             (autoload 'citre-peek "citre")
+;;             (autoload 'citre-ace-peek "citre")
+;;             (autoload 'citre-auto-enable-citre-mode "citre")
+;;             ))
 
 ;; }}
 
@@ -393,5 +393,13 @@ point reaches the beginning or end of the buffer, stop there."
   (evil-insert-state))
 
 (add-hook 'git-commit-mode-hook 'my-git-pos-and-state)
+
+;; {{ leetcode
+;; (local-require 'leetcode)
+;; (setq leetcode-prefer-language "go")
+;; (setq leetcode-save-solutions t)
+;; (setq leetcode-directory "~/Learn/leetcode")
+
+;; }}
 
 (provide 'init-stepdc)
